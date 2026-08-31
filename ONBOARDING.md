@@ -13,11 +13,11 @@
 
 Bienvenido al proyecto de la materia **Habilidades DevOps**.
 
-El objetivo de este documento es proporcionar a los nuevos integrantes del equipo una guía para preparar su entorno de desarrollo, comprender las herramientas utilizadas y ejecutar correctamente el p[...]
+El objetivo de este documento es proporcionar a los nuevos integrantes del equipo una guía clara y práctica para preparar su entorno de desarrollo, comprender las herramientas y flujos usados en el proyecto, ejecutar las pruebas locales y en CI, y seguir las buenas prácticas para colaborar en el repositorio.
 
-El sistema está desarrollado utilizando **Python** para el frontend y backend, y **MySQL** como sistema de gestión de base de datos.
+El sistema está desarrollado utilizando **Python** y utiliza **MySQL** como sistema de gestión de base de datos. Dependiendo de la implementación, el proyecto puede contener componentes de backend y/o frontend implementados en Python.
 
-Además, el proyecto utiliza prácticas de DevOps para automatizar la validación del código mediante **Integración Continua (CI)** con GitHub Actions.
+Además, el proyecto sigue prácticas de DevOps para automatizar la validación del código mediante **Integración Continua (CI)** con GitHub Actions.
 
 El flujo principal del proyecto es:
 
@@ -25,11 +25,11 @@ El flujo principal del proyecto es:
 
 ---
 
-# 2. Arquitectura general del entorno
+## 2. Arquitectura general del entorno
 
 El proyecto utiliza las siguientes herramientas:
 
-| Herramienta      |Función                          |
+| Herramienta      | Función                          |
 | ---------------- | -------------------------------- |
 | Python 3.14.0    | Lenguaje principal del proyecto  |
 | pytest 9.1.1     | Pruebas automatizadas            |
@@ -37,7 +37,7 @@ El proyecto utiliza las siguientes herramientas:
 | venv             | Creación del entorno virtual     |
 | pip              | Administración de dependencias   |
 | requirements.txt | Control de dependencias          |
-| MySQL 8.0.46 LTS | Base de datos                    |
+| MySQL 8.0.x      | Base de datos                    |
 | pytest-cov       | Medición de cobertura de pruebas |
 | Git              | Control de versiones             |
 | GitHub           | Repositorio y colaboración       |
@@ -45,11 +45,11 @@ El proyecto utiliza las siguientes herramientas:
 
 ---
 
-# 3. Requisitos previos
+## 3. Requisitos previos
 
 Antes de comenzar, el integrante debe tener instalado:
 
-* Python 3.14.0
+* Python 3.14.0 (o versión compatible según requirements)
 * Git
 * Una cuenta de GitHub
 * Un editor de código, preferentemente Visual Studio Code
@@ -75,7 +75,7 @@ git --version
 
 ---
 
-# 4. Clonar el proyecto
+## 4. Clonar el proyecto
 
 El primer paso es obtener una copia local del repositorio.
 
@@ -99,13 +99,13 @@ git status
 
 ---
 
-# 5. Configuración del entorno virtual
+## 5. Configuración del entorno virtual
 
 El proyecto utiliza **venv** para crear un entorno virtual de Python.
 
 El entorno virtual permite mantener aisladas las dependencias del proyecto y evita conflictos con otros proyectos instalados en la computadora.
 
-## Windows
+### Windows
 
 Ejecutar:
 
@@ -125,7 +125,7 @@ Cuando el entorno esté activo, la terminal mostrará normalmente:
 (venv)
 ```
 
-## Linux / macOS
+### Linux / macOS
 
 Crear el entorno:
 
@@ -141,7 +141,7 @@ source venv/bin/activate
 
 ---
 
-# 6. Instalación de dependencias
+## 6. Instalación de dependencias
 
 Una vez activado el entorno virtual, instalar las dependencias mediante:
 
@@ -161,7 +161,7 @@ pip list
 
 ---
 
-# 7. Estructura recomendada del proyecto
+## 7. Estructura recomendada del proyecto
 
 La estructura puede organizarse de la siguiente manera:
 
@@ -193,7 +193,7 @@ La estructura puede variar dependiendo de la implementación final del sistema.
 
 ---
 
-# 8. Python
+## 8. Python
 
 **Python** es el lenguaje principal utilizado en el proyecto.
 
@@ -207,7 +207,7 @@ Fijar una versión concreta ayuda a mantener la reproducibilidad del entorno y r
 
 ---
 
-# 9. pytest
+## 9. pytest
 
 **pytest** es el framework utilizado para realizar las pruebas automatizadas.
 
@@ -242,7 +242,7 @@ tests/
 
 ---
 
-# 10. Flake8
+## 10. Flake8
 
 **Flake8** es la herramienta utilizada para realizar análisis estático del código Python.
 
@@ -267,25 +267,19 @@ Antes de realizar un commit, se recomienda ejecutar esta validación para detect
 
 ---
 
-# 11. requirements.txt
+## 11. requirements.txt
 
-El archivo:
-
-```text
-requirements.txt
-```
-
-contiene las dependencias necesarias para ejecutar y probar el proyecto.
+El archivo `requirements.txt` contiene las dependencias necesarias para ejecutar y probar el proyecto.
 
 Un ejemplo podría ser:
 
 ```text
 pytest==9.1.1
 flake8==7.3.0
-pytest-cov==...
+pytest-cov==4.0.0
 ```
 
-Las versiones deben mantenerse controladas para garantizar que los diferentes integrantes trabajen con dependencias compatibles.
+Asegúrate de usar versiones concretas y probadas en el proyecto. Mantén `requirements.txt` actualizado cuando añadas o actualices paquetes.
 
 Para instalar todas las dependencias:
 
@@ -295,13 +289,13 @@ pip install -r requirements.txt
 
 ---
 
-# 12. MySQL
+## 12. MySQL
 
 **MySQL** es el sistema de gestión de bases de datos utilizado por el proyecto.
 
 ### Versión recomendada
 
-**MySQL 8.0.46 LTS**
+**MySQL 8.0.x**
 
 La base de datos almacena y administra la información utilizada por el sistema.
 
@@ -311,19 +305,29 @@ Esto permite ejecutar las pruebas sin depender de una base de datos instalada en
 
 ---
 
-# 13. Base de datos para pruebas
+## 13. Base de datos para pruebas
 
 Dentro del entorno de CI, GitHub Actions puede levantar un servicio MySQL utilizando un contenedor.
 
-Por ejemplo:
+Por ejemplo (en GitHub Actions services):
 
-```text
-mysql:8.4
+```yaml
+services:
+  mysql:
+    image: mysql:8.0
+    env:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_db
+    ports:
+      - 3306:3306
+    options: >-
+      --health-cmd "mysqladmin ping --silent"
+      --health-interval 10s
+      --health-timeout 5s
+      --health-retries 3
 ```
 
-Esto permite que el pipeline tenga acceso a una base de datos independiente para ejecutar las pruebas.
-
-El objetivo es evitar que las pruebas modifiquen la base de datos utilizada durante el desarrollo.
+Esto permite que el pipeline tenga acceso a una base de datos independiente para ejecutar las pruebas. El objetivo es evitar que las pruebas modifiquen la base de datos utilizada durante el desarrollo.
 
 El flujo sería:
 
@@ -345,9 +349,9 @@ Obtiene resultado de las pruebas
 
 ---
 
-# 14. Coverage
+## 14. Coverage
 
-**pytest-cov** es una herramienta opcional utilizada para medir la cobertura del código.
+**pytest-cov** es una herramienta utilizada para medir la cobertura del código.
 
 La cobertura indica qué porcentaje del código fue ejecutado durante las pruebas automatizadas.
 
@@ -356,8 +360,6 @@ Por ejemplo:
 ```text
 TOTAL    85%
 ```
-
-Esto significa que aproximadamente el 85 % de las líneas analizadas fueron ejecutadas durante las pruebas.
 
 Para ejecutar pytest con cobertura:
 
@@ -375,7 +377,7 @@ Esto permite consultar visualmente qué partes del código están cubiertas y cu
 
 ---
 
-# 15. Git y GitHub
+## 15. Git y GitHub
 
 Git se utiliza para controlar las diferentes versiones del código.
 
@@ -425,7 +427,7 @@ Enviar cambios al repositorio remoto.
 
 ---
 
-# 16. GitHub Actions
+## 16. GitHub Actions
 
 GitHub Actions se utiliza para implementar el proceso de **Integración Continua (CI)**.
 
@@ -465,11 +467,11 @@ Instalar requirements.txt
 
 ---
 
-# 17. Pipeline de CI
+## 17. Pipeline de CI
 
 El pipeline tiene cuatro etapas principales.
 
-## Etapa 1 — Preparación
+### Etapa 1 — Preparación
 
 Se configura Python y se crea el entorno necesario para ejecutar el proyecto.
 
@@ -481,9 +483,7 @@ venv
 requirements.txt
 ```
 
----
-
-## Etapa 2 — Calidad de código
+### Etapa 2 — Calidad de código
 
 Se ejecuta Flake8:
 
@@ -493,9 +493,7 @@ flake8 .
 
 Si existen errores de estilo o problemas detectados por el linter, el pipeline puede detenerse.
 
----
-
-## Etapa 3 — Pruebas automatizadas
+### Etapa 3 — Pruebas automatizadas
 
 Se levanta una instancia de MySQL para pruebas y posteriormente se ejecuta:
 
@@ -505,9 +503,7 @@ pytest
 
 Si alguna prueba falla, el pipeline se marca como fallido.
 
----
-
-## Etapa 4 — Cobertura
+### Etapa 4 — Cobertura
 
 De manera opcional se ejecuta:
 
@@ -519,85 +515,71 @@ El resultado permite conocer qué porcentaje del código está siendo probado.
 
 ---
 
-# 18. Flujo de trabajo para nuevos integrantes
+## 18. Flujo de trabajo para nuevos integrantes
 
 Cuando un nuevo integrante se incorpora al proyecto, debe seguir este procedimiento:
 
-### Paso 1
-
-Clonar el repositorio:
+1. Clonar el repositorio:
 
 ```bash
 git clone URL_DEL_REPOSITORIO
 ```
 
-### Paso 2
-
-Entrar al proyecto:
+2. Entrar al proyecto:
 
 ```bash
 cd NOMBRE_DEL_PROYECTO
 ```
 
-### Paso 3
-
-Crear el entorno virtual:
+3. Crear el entorno virtual:
 
 ```bash
 python -m venv venv
 ```
 
-### Paso 4
-
-Activar el entorno:
+4. Activar el entorno (Windows):
 
 ```bash
 venv\Scripts\activate
 ```
 
-### Paso 5
+o (Linux/macOS):
 
-Instalar dependencias:
+```bash
+source venv/bin/activate
+```
+
+5. Instalar dependencias:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Paso 6
-
-Ejecutar las pruebas:
+6. Ejecutar las pruebas:
 
 ```bash
 pytest
 ```
 
-### Paso 7
-
-Ejecutar el análisis de código:
+7. Ejecutar el análisis de código:
 
 ```bash
 flake8 .
 ```
 
-### Paso 8
-
-Ejecutar coverage, si está habilitado:
+8. Ejecutar coverage, si está habilitado:
 
 ```bash
 pytest --cov=.
 ```
 
-### Paso 9
-
-Comprobar el estado del repositorio:
+9. Comprobar el estado del repositorio:
 
 ```bash
 git status
 ```
 
-### Paso 10
-
-Realizar los cambios correspondientes y crear un commit:
+10. Realizar los cambios correspondientes y crear un commit:
 
 ```bash
 git add .
@@ -607,7 +589,7 @@ git push
 
 ---
 
-# 19. Buenas prácticas del equipo
+## 19. Buenas prácticas del equipo
 
 Para mantener un proyecto organizado se recomienda:
 
@@ -625,7 +607,7 @@ Para mantener un proyecto organizado se recomienda:
 
 ---
 
-# 20. Archivo .gitignore
+## 20. Archivo .gitignore
 
 La carpeta del entorno virtual no debe subirse a GitHub.
 
@@ -645,7 +627,7 @@ Esto evita almacenar archivos temporales, credenciales o archivos generados auto
 
 ---
 
-# 21. Checklist de onboarding
+## 21. Checklist de onboarding
 
 El nuevo integrante deberá comprobar:
 
@@ -666,7 +648,7 @@ El nuevo integrante deberá comprobar:
 
 ---
 
-# 22. Solución rápida de problemas
+## 22. Solución rápida de problemas
 
 ### Python no es reconocido
 
@@ -723,7 +705,7 @@ Verificar:
 
 ---
 
-# 23. Objetivo DevOps del proyecto
+## 23. Objetivo DevOps del proyecto
 
 El propósito de utilizar estas herramientas no es únicamente ejecutar el programa, sino establecer un proceso automatizado que permita comprobar continuamente la calidad del software.
 
@@ -759,11 +741,11 @@ De esta manera, cada cambio realizado por el equipo puede ser validado automáti
 
 ---
 
-# 24. Conclusión
+## 24. Conclusión
 
 El entorno del proyecto está diseñado para aplicar principios fundamentales de DevOps, principalmente **reproducibilidad, automatización, integración continua y control de calidad**.
 
-Python proporciona el entorno de desarrollo, `venv` y `requirements.txt` permiten reproducir las dependencias, Flake8 automatiza el análisis de calidad, pytest ejecuta las pruebas, MySQL proporciona [...]
+Python proporciona el entorno de desarrollo; `venv` y `requirements.txt` permiten reproducir las dependencias; Flake8 automatiza el análisis de calidad; pytest ejecuta las pruebas; y MySQL proporciona el almacenamiento de datos cuando corresponde.
 
 El objetivo final es que cualquier integrante autorizado pueda clonar el proyecto, configurar su entorno y comenzar a trabajar siguiendo un procedimiento estandarizado.
 
