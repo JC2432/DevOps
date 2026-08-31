@@ -205,13 +205,3 @@ git checkout -b feat/mi-cambio
 
 2. Asegurarse de que `flake8` y `pytest` pasen localmente.
 3. Abrir un Pull Request describiendo los cambios.
-
----
-
-## Licencia
-
-Añade aquí la licencia del proyecto (por ejemplo, MIT) si corresponde.
-
----
-
-Si quieres, puedo agregar un ejemplo de `ci.yml` para GitHub Actions o adaptar el README para detallar cómo ejecutar la aplicación según el código real del `backend/` y `frontend/`.
