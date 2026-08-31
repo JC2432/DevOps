@@ -6,10 +6,9 @@ Repositorio del proyecto de la materia **Habilidades DevOps**: una aplicación p
 Este proyecto es una aplicación para la gestión de una biblioteca. Su objetivo principal es facilitar el control del inventario de libros y el proceso de préstamos y devoluciones. Además, permite registrar nuevos empleados y administradores, asegurando que la biblioteca funcione de manera organizada y eficiente.
 ## ¿Para qué nos sirve?
 Gestión de inventario: Saber qué libros están disponibles, cuáles están prestados y cuáles han sido devueltos.
-
 Control de préstamos: Registrar fácilmente quién pidió un libro y cuándo debe devolverlo.
-
 Administración de usuarios: Dar de alta a nuevos empleados y administradores con sus respectivos roles.
+
 ---
 ## Ventajas
 *Organización:* Todo el inventario y los préstamos quedan registrados en un solo sistema.
@@ -17,6 +16,7 @@ Administración de usuarios: Dar de alta a nuevos empleados y administradores co
 *Seguridad:* Los datos se almacenan en una base de datos confiable (MySQL), evitando pérdidas de información.
 *Escalabilidad:* Se puede ampliar para incluir nuevas funciones, como reportes o estadísticas.
 *Accesibilidad:* Al estar desarrollado en Python, es fácil de mantener y mejorar por estudiantes o profesionales.
+
 ---
 ## Resumen
 
