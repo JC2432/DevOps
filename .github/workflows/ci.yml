@@ -48,8 +48,8 @@ jobs:
       # 2. Reconstruir la base de datos desde cero en el contenedor
       - name: Inicializar esquema y datos de prueba
         run: |
-          mysql -h 127.0.0.1 -u biblio_app -pTuPasswordSeguro123! biblioteca_db < schema.sql
-          mysql -h 127.0.0.1 -u biblio_app -pTuPasswordSeguro123! biblioteca_db < seed.sql
+          mysql -h 127.0.0.1 -u biblio_app -pTuPasswordSeguro123! biblioteca_db < database/schema.sql
+          mysql -h 127.0.0.1 -u biblio_app -pTuPasswordSeguro123! biblioteca_db < database/seed.sql
 
       # 3. Ejecutar las pruebas del backend simulando la conexión
       - name: Correr pruebas con pytest
