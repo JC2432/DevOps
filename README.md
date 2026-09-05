@@ -1,229 +1,79 @@
-# DevOps — Proyecto Habilidades DevOps
+# Sistema de Préstamos/Biblioteca — Proyecto Habilidades DevOps
 
-Repositorio del proyecto de la materia **Habilidades DevOps**: una aplicación para la gestión de préstamos en una biblioteca desarrollada en Python y respaldada por MySQL.
-## ¿Qué es este proyecto?
+Proyecto académico para la materia de Habilidades DevOps. Stack: Python (FastAPI) + HTML/CSS/JS + MySQL, con pipeline de CI en GitHub Actions.
 
-Este proyecto es una aplicación para la gestión de una biblioteca. Su objetivo principal es facilitar el control del inventario de libros y el proceso de préstamos y devoluciones. Además, permite registrar nuevos empleados y administradores, asegurando que la biblioteca funcione de manera organizada y eficiente.
-## ¿Para qué nos sirve?
-**Gestión de inventario:** Saber qué libros están disponibles, cuáles están prestados y cuáles han sido devueltos.
+> Para la guía completa de configuración del entorno, ver [`ONBOARDING.md`](./ONBOARDING.md).
+> Para el detalle y justificación de cada herramienta, ver [`herramientas-devops.md`](./herramientas-devops.md).
 
-**Control de préstamos:** Registrar fácilmente quién pidió un libro y cuándo debe devolverlo.
+## Integrantes y roles
 
-**Administración de usuarios:** Dar de alta a nuevos empleados y administradores con sus respectivos roles.
+| Rol | Responsable | Carpeta principal |
+|---|---|---|
+| Backend (API REST) | Luis | `backend/` |
+| Frontend | _(pendiente)_ | `frontend/` |
+| Base de Datos | _(pendiente)_ | `database/` |
+| DevOps / CI | _(pendiente)_ | `.github/workflows/` |
 
----
-## Ventajas
-**Organización:** Todo el inventario y los préstamos quedan registrados en un solo sistema.
+## Estructura del repositorio
 
-**Rapidez:** Los procesos de préstamo y devolución se realizan en segundos.
-
-**Seguridad:** Los datos se almacenan en una base de datos confiable (MySQL), evitando pérdidas de información.
-
-**Escalabilidad:** Se puede ampliar para incluir nuevas funciones, como reportes o estadísticas.
-
-**Accesibilidad:** Al estar desarrollado en Python, es fácil de mantener y mejorar por estudiantes o profesionales.
-
----
-## Resumen
-
-- Stack: Python (backend / frontend) + MySQL
-- Objetivo: Facilitar los préstamos de libros, registrar entregas y devoluciones y administrar el inventario de la biblioteca.
-- Propósito: almacenar el código fuente, las pruebas y la configuración de CI/CD para la asignatura.
-
----
-
-## Requisitos
-
-- Python 3.14.0 (recomendado)
-- MySQL 8.0.x (sugerido: 8.0.46)
-- Git
-- Cuenta de GitHub
-- Editor de código (recomendado: Visual Studio Code)
-
-Comprobar versiones:
-
-```bash
-python --version
-# Ejemplo: Python 3.14.0
-
-git --version
 ```
-
----
-
-## Estructura del proyecto (recomendada)
-
-```text
-proyecto/
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
-├── backend/
-├── frontend/
-├── tests/
+.
+├── backend/             # API REST (FastAPI)
+│   └── app/
+│       ├── main.py
+│       ├── database.py
+│       └── routers/
+├── frontend/             # HTML + CSS + JS
+│   ├── index.html
+│   ├── style.css
+│   ├── app.js
+│   └── pages/
+├── database/             # Scripts SQL
+│   ├── schema.sql
+│   └── seed.sql
+├── tests/                # Pruebas automatizadas (pytest)
+├── .github/workflows/    # Pipeline de CI
+│   └── ci.yml
 ├── requirements.txt
+├── pytest.ini
+├── .flake8
+├── .gitignore
 ├── README.md
-└── .gitignore
+├── ONBOARDING.md
+└── herramientas-devops.md
 ```
 
-La estructura puede variar según la implementación final.
+## Cómo trabajar en este repo
 
----
+1. Clona el repositorio (ver pasos detallados en `ONBOARDING.md`).
+2. Crea una rama por feature/tarea: `git checkout -b backend/endpoint-prestamos`.
+3. Cada quien trabaja únicamente dentro de su carpeta (`backend/`, `frontend/`, `database/`) para evitar conflictos de merge.
+4. Sube tus avances con commits pequeños y descriptivos.
+5. Abre un Pull Request hacia `main` — el pipeline de CI corre automáticamente (flake8 + pytest + MySQL).
 
-## Instalación y puesta en marcha (local)
-
-1. Clonar el repositorio:
-
-```bash
-git clone URL_DEL_REPOSITORIO
-cd NOMBRE_DEL_PROYECTO
-```
-
-2. Crear y activar el entorno virtual
-
-Windows:
+## Levantar el proyecto localmente
 
 ```bash
 python -m venv venv
-venv\Scripts\activate
-```
-
-Linux / macOS:
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-3. Instalar dependencias:
-
-```bash
+source venv/bin/activate   # En Windows: venv\Scripts\activate
 pip install -r requirements.txt
+uvicorn backend.app.main:app --reload
 ```
 
-4. Configurar la base de datos MySQL:
+La API quedará disponible en `http://localhost:8000` y la documentación interactiva en `http://localhost:8000/docs`.
 
-- Crear la base de datos (por ejemplo `biblioteca_db`).
-- Configurar usuario y contraseña.
-- Definir las variables de entorno que use la aplicación (`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`).
-
-5. Ejecutar la aplicación (los comandos pueden variar según la estructura del proyecto):
-
-```bash
-# ejemplo genérico (ajustar según la implementación)
-python -m backend.app
-```
-
----
-
-## Pruebas y calidad de código
-
-- Ejecutar tests con pytest:
+## Ejecutar pruebas y linter localmente
 
 ```bash
 pytest
-```
-
-- Ejecutar coverage:
-
-```bash
-pytest --cov=.
-```
-
-- Ejecutar flake8 (lint):
-
-```bash
 flake8 .
+pytest --cov=backend tests/
 ```
 
-Se recomienda ejecutar estas comprobaciones antes de subir cambios.
+## Levantar el frontend localmente
 
----
+Basta con abrir `frontend/index.html` en el navegador (o servirlo con cualquier servidor estático), con el backend corriendo en paralelo.
 
-## Integración continua (GitHub Actions)
+## Base de datos
 
-El proyecto incluye (o puede incluir) un pipeline de CI en GitHub Actions con el siguiente flujo:
-
-1. Preparar entorno Python
-2. Instalar dependencias
-3. Ejecutar flake8
-4. Levantar servicio MySQL para pruebas
-5. Ejecutar pytest
-6. Generar reporte de coverage (opcional)
-
-Ejemplo de servicio MySQL en GitHub Actions:
-
-```yaml
-services:
-  mysql:
-    image: mysql:8.0
-    env:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: test_db
-    ports:
-      - 3306:3306
-    options: >-
-      --health-cmd "mysqladmin ping --silent"
-      --health-interval 10s
-      --health-timeout 5s
-      --health-retries 3
-```
-
----
-
-## Buenas prácticas del equipo
-
-* No subir la carpeta `venv/` al repositorio.
-* Mantener `requirements.txt` actualizado.
-* Crear pruebas para nuevas funcionalidades.
-* Ejecutar `pytest` y `flake8` antes de push.
-* Usar mensajes de commit claros y descriptivos.
-* No almacenar contraseñas ni credenciales en el código; usar variables de entorno o un gestor de secretos.
-* Verificar que el pipeline de CI finalice correctamente antes de mergear.
-
----
-
-## .gitignore recomendado
-
-```text
-venv/
-__pycache__/
-*.pyc
-.env
-.pytest_cache/
-.coverage
-htmlcov/
-```
-
----
-
-## Checklist de onboarding
-
-* [ ] Tiene Python instalado.
-* [ ] Tiene Git instalado.
-* [ ] Tiene acceso al repositorio de GitHub.
-* [ ] Clonó correctamente el proyecto.
-* [ ] Creó y activó el entorno virtual.
-* [ ] Instaló `requirements.txt`.
-* [ ] Puede ejecutar `pytest`.
-* [ ] Puede ejecutar `flake8`.
-* [ ] Puede conectarse a la base de datos de desarrollo, si corresponde.
-* [ ] Comprende la estructura básica del proyecto.
-* [ ] Comprende el flujo Git → GitHub → GitHub Actions.
-* [ ] Realizó correctamente un commit y push.
-* [ ] El pipeline de CI termina correctamente.
-
----
-
-## Contribuir
-
-1. Crear una rama para su cambio:
-
-```bash
-git checkout -b feat/mi-cambio
-```
-
-2. Asegurarse de que `flake8` y `pytest` pasen localmente.
-3. Abrir un Pull Request describiendo los cambios.
+Ver `database/schema.sql` para el esquema y `database/seed.sql` para datos de ejemplo. Instrucciones detalladas de conexión, a completar por el encargado de BD.
