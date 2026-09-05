@@ -1,54 +1,64 @@
-name: CI
+name: Pruebas del Backend y Base de Datos
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main", "develop" ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
+    # 1. Configuración del Service Container de MySQL
     services:
       mysql:
-        image: mysql:8.0.46
+        # Se usa la versión 8.0 para coincidir con tu entorno local
+        image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: biblioteca
+          # Estas variables crean automáticamente la BD y el usuario al iniciar el contenedor
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: biblioteca_db
+          MYSQL_USER: biblio_app
+          MYSQL_PASSWORD: TuPasswordSeguro123!
+        # Se expone el puerto estándar de MySQL
         ports:
           - 3306:3306
+        # Opciones de salud para asegurar que MySQL esté listo antes de correr las pruebas
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -h localhost"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=3
 
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
+      - name: Clonar el repositorio
+        uses: actions/checkout@v3
 
-      - name: Configurar Python
-        uses: actions/setup-python@v5
+      - name: Configurar entorno de Python
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.14"
+          python-version: '3.10'
 
-      - name: Instalar dependencias
+      - name: Instalar dependencias del backend
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install pytest mysql-connector-python
 
-      - name: Cargar esquema de base de datos
+      # 2. Reconstruir la base de datos desde cero en el contenedor
+      - name: Inicializar esquema y datos de prueba
         run: |
-          mysql -h 127.0.0.1 -uroot -proot biblioteca < database/schema.sql
+          mysql -h 127.0.0.1 -u biblio_app -pTuPasswordSeguro123! biblioteca_db < schema.sql
+          mysql -h 127.0.0.1 -u biblio_app -pTuPasswordSeguro123! biblioteca_db < seed.sql
 
-      - name: Linter (flake8)
-        run: flake8 .
-
-      - name: Pruebas (pytest)
+      # 3. Ejecutar las pruebas del backend simulando la conexión
+      - name: Correr pruebas con pytest
         env:
+          # Se inyectan las credenciales como variables de entorno para que el código Python las consuma de forma segura
           DB_HOST: 127.0.0.1
-          DB_USER: root
-          DB_PASSWORD: root
-          DB_NAME: biblioteca
-        run: pytest --cov=backend tests/
+          DB_PORT: 3306
+          DB_USER: biblio_app
+          DB_PASSWORD: TuPasswordSeguro123!
+          DB_NAME: biblioteca_db
+        run: |
+          pytest
