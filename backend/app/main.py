@@ -10,6 +10,10 @@ app = FastAPI(
 app.include_router(prestamos.router)
 app.include_router(libros.router)
 app.include_router(usuarios.router)
+app.include_router(autores.router)
+app.include_router(editoriales.router)
+app.include_router(categorias.router)
+app.include_router(clientes.router)
 
 
 @app.get("/")
