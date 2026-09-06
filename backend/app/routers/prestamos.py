@@ -7,15 +7,29 @@ router = APIRouter(prefix="/prestamos", tags=["prestamos"])
 
 @router.get("/")
 def obtener_prestamos():
-    """Devuelve la lista de préstamos registrados."""
+    """Devuelve la lista de préstamos, incluyendo nombre del cliente y estado legible."""
     conn = get_connection()
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM PRESTAMOS")
+        cursor.execute(
+            """
+            SELECT
+                p.PRESTAMO_ID,
+                p.CLIENTE_ID,
+                CONCAT(c.NOMBRE, ' ', c.APELLIDO_P) AS CLIENTE_NOMBRE,
+                p.USUARIO_ID,
+                p.FECHA_PRESTAMO,
+                p.FECHA_DEVOLUCION,
+                p.ESTADO_PRESTAMOS_ID,
+                ep.ESTADO AS ESTADO_NOMBRE
+            FROM PRESTAMOS p
+            JOIN CLIENTES c ON p.CLIENTE_ID = c.CLIENTE_ID
+            JOIN ESTADO_PRESTAMOS ep ON p.ESTADO_PRESTAMOS_ID = ep.ESTADO_PRESTAMOS_ID
+            """
+        )
         return {"prestamos": cursor.fetchall()}
     finally:
         conn.close()
-
 
 @router.get("/{prestamo_id}")
 def obtener_prestamo(prestamo_id: str):

@@ -8,19 +8,29 @@ CAMPOS_USUARIO = (
     "USUARIO_ID, CARGO_ID, USERNAME, NOMBRE, APELLIDO_P, APELLIDO_M"
 )
 
-
 @router.get("/")
 def obtener_usuarios():
-    """Devuelve la lista de usuarios (bibliotecarios/administradores)."""
+    """Devuelve la lista de usuarios, incluyendo el nombre del puesto legible."""
     conn = get_connection()
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute(f"SELECT {CAMPOS_USUARIO} FROM USUARIOS")
-        resultados = cursor.fetchall()
-        return {"usuarios": resultados}
+        cursor.execute(
+            """
+            SELECT
+                u.USUARIO_ID,
+                u.CARGO_ID,
+                c.PUESTO AS CARGO_NOMBRE,
+                u.USERNAME,
+                u.NOMBRE,
+                u.APELLIDO_P,
+                u.APELLIDO_M
+            FROM USUARIOS u
+            JOIN CARGO c ON u.CARGO_ID = c.CARGO_ID
+            """
+        )
+        return {"usuarios": cursor.fetchall()}
     finally:
         conn.close()
-
 
 @router.get("/{usuario_id}")
 def obtener_usuario(usuario_id: str):
