@@ -10,7 +10,7 @@ def obtener_prestamos():
     conn = get_connection()
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM prestamos")
+        cursor.execute("SELECT * FROM PRESTAMOS")
         resultados = cursor.fetchall()
         return {"prestamos": resultados}
     finally:
@@ -18,13 +18,13 @@ def obtener_prestamos():
 
 
 @router.get("/{prestamo_id}")
-def obtener_prestamo(prestamo_id: int):
-    """Devuelve un préstamo específico por su id."""
+def obtener_prestamo(prestamo_id: str):
+    """Devuelve un préstamo específico por su id (PRESTAMO_ID, ej. 'P001')."""
     conn = get_connection()
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute(
-            "SELECT * FROM prestamos WHERE id = %s", (prestamo_id,)
+            "SELECT * FROM PRESTAMOS WHERE PRESTAMO_ID = %s", (prestamo_id,)
         )
         resultado = cursor.fetchone()
         if not resultado:
