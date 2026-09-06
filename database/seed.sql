@@ -1,6 +1,9 @@
 -- Datos de ejemplo — a completar por el encargado de BD
 
 -- Insertar catálogos básicos
+INSERT INTO AUTORES (AUTOR_ID, NACIONALIDAD_ID, NOMBRE_AUTOR, APELLIDO_P, APELLIDO_M) VALUES
+  ('A001', 'N001', 'Juan', 'Rulfo', NULL);
+  
 INSERT INTO NACIONALIDAD (NACIONALIDAD_ID, NOMBRE) VALUES 
 ('N001', 'Mexicana'), ('N002', 'Española'), ('N003', 'Estadounidense');
 

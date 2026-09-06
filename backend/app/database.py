@@ -37,3 +37,21 @@ def get_pool():
 def get_connection():
     """Devuelve una conexión del pool. Recuerda cerrarla después de usarla."""
     return get_pool().get_connection()
+
+def generar_siguiente_id(cursor, tabla, columna_id, prefijo, ancho_numero):
+    """
+    Genera el siguiente ID disponible con un prefijo dado.
+    Ej: generar_siguiente_id(cursor, "CLIENTES", "CLIENTE_ID", "C", 3) -> "C003"
+    """
+    cursor.execute(
+        f"SELECT {columna_id} FROM {tabla} "
+        f"WHERE {columna_id} LIKE %s ORDER BY {columna_id} DESC LIMIT 1",
+        (f"{prefijo}%",),
+    )
+    fila = cursor.fetchone()
+    if fila:
+        ultimo_id = fila[0] if not isinstance(fila, dict) else fila[columna_id]
+        numero = int(ultimo_id[len(prefijo):]) + 1
+    else:
+        numero = 1
+    return f"{prefijo}{numero:0{ancho_numero}d}"
