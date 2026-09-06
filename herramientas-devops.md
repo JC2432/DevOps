@@ -8,7 +8,7 @@
 
 ## 1. Python (Backend)
 
-**Versión recomendada:** Python 3.14.0 (estable y con amplio soporte de librerías)
+**Versión recomendada:** Python 3.12.0 (estable y con amplio soporte de librerías)
 
 **Función:** Lenguaje del backend — expone una API REST mediante **FastAPI** o **Flask**.
 
@@ -109,7 +109,7 @@ def test_obtener_prestamos():
 
 ## 6. venv + requirements.txt
 
-**Versión recomendada:** `venv` viene incluido con Python 3.13+. `pip` ≥ 24.x (se actualiza junto con Python).
+**Versión recomendada:** `venv` viene incluido con Python 3.12+. `pip` ≥ 24.x (se actualiza junto con Python).
 
 **Función:** Entorno virtual de Python y archivo de dependencias fijas.
 
