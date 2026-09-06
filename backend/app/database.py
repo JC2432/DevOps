@@ -8,6 +8,8 @@ usar variables de entorno en lugar de valores fijos en el código.
 
 import os
 import mysql.connector
+from dotenv import load_dotenv
+load_dotenv()  # Carga las variables de entorno desde el archivo .env
 from mysql.connector import pooling
 
 DB_CONFIG = {
