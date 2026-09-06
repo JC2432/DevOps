@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Libros</title>
-  <link rel="stylesheet" href="../style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libros - Biblioteca</title>
+    <!-- El ../ indica que debe salir de la carpeta pages para encontrar el CSS -->
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-  <h1>Libros</h1>
-  <div id="lista-libros"></div>
-  <script src="../app.js"></script>
+    <nav class="navbar">
+        <h2>Biblioteca</h2>
+        <div class="nav-links">
+            <a href="../index.html">Inicio</a>
+            <a href="libros.html">Libros</a>
+            <a href="prestamos.html">Préstamos</a>
+            <a href="usuarios.html">Usuarios</a>
+        </div>
+    </nav>
+
+    <main id="contenedor-principal">
+        <!-- El contenido será inyectado aquí por app.js -->
+    </main>
+
+    <!-- El ../ indica que debe salir de la carpeta pages para encontrar el JS -->
+    <script src="../app.js"></script>
 </body>
 </html>
