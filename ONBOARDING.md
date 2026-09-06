@@ -31,7 +31,7 @@ El proyecto utiliza las siguientes herramientas:
 
 | Herramienta      | Función                          |
 | ---------------- | -------------------------------- |
-| Python 3.14.0    | Lenguaje principal del proyecto  |
+| Python 3.12.0    | Lenguaje principal del proyecto  |
 | pytest 9.1.1     | Pruebas automatizadas            |
 | flake8 7.3.0     | Análisis y calidad del código    |
 | venv             | Creación del entorno virtual     |
@@ -49,7 +49,7 @@ El proyecto utiliza las siguientes herramientas:
 
 Antes de comenzar, el integrante debe tener instalado:
 
-* Python 3.14.0 (o versión compatible según requirements)
+* Python 3.12.0 (o versión compatible según requirements)
 * Git
 * Una cuenta de GitHub
 * Un editor de código, preferentemente Visual Studio Code
@@ -201,7 +201,7 @@ Se utiliza tanto para el desarrollo del sistema como para la ejecución de las p
 
 ### Versión recomendada
 
-**Python 3.14.0**
+**Python 3.12.0**
 
 Fijar una versión concreta ayuda a mantener la reproducibilidad del entorno y reduce problemas derivados de diferencias entre versiones.
 

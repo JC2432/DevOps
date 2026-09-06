@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routers import prestamos, libros, usuarios, autores, editoriales, categorias, clientes
+from .routers import prestamos, libros, usuarios, autores, editorial, categorias, clientes
 
 app = FastAPI(
     title="Sistema de Préstamos/Biblioteca",
@@ -11,7 +11,7 @@ app.include_router(prestamos.router)
 app.include_router(libros.router)
 app.include_router(usuarios.router)
 app.include_router(autores.router)
-app.include_router(editoriales.router)
+app.include_router(editorial.router)
 app.include_router(categorias.router)
 app.include_router(clientes.router)
 
