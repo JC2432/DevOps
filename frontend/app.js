@@ -69,7 +69,85 @@ async function cargarLibros() {
     }
 }
 
-// Ejecutar funciones dependiendo de la página en la que estemos
-if (window.location.pathname.includes('libros.html')) {
+// Función para renderizar préstamos
+async function cargarPrestamos() {
+    const contenedor = document.getElementById('contenedor-principal');
+    contenedor.innerHTML = '<div class="mensaje-cargando">Cargando préstamos...</div>';
+
+    try {
+        const prestamos = await obtenerDatos('/prestamos');
+        let htmlTabla = `
+            <h2>Lista de Préstamos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Préstamo</th>
+                        <th>Cliente</th>
+                        <th>Fecha Préstamo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        prestamos.forEach(p => {
+            htmlTabla += `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.cliente}</td>
+                    <td>${p.fecha_prestamo}</td>
+                    <td>${p.estado}</td>
+                </tr>
+            `;
+        });
+        htmlTabla += '</tbody></table>';
+        contenedor.innerHTML = htmlTabla;
+    } catch (error) {
+        contenedor.innerHTML = `<div class="mensaje-error">Error al cargar préstamos: ${error.message}</div>`;
+    }
+}
+
+// Función para renderizar usuarios
+async function cargarUsuarios() {
+    const contenedor = document.getElementById('contenedor-principal');
+    contenedor.innerHTML = '<div class="mensaje-cargando">Cargando usuarios...</div>';
+
+    try {
+        const usuarios = await obtenerDatos('/usuarios');
+        let htmlTabla = `
+            <h2>Directorio de Usuarios</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Nombre</th>
+                        <th>Rol</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        usuarios.forEach(u => {
+            htmlTabla += `
+                <tr>
+                    <td>${u.username}</td>
+                    <td>${u.nombre} ${u.apellido_p}</td>
+                    <td>${u.cargo}</td>
+                </tr>
+            `;
+        });
+        htmlTabla += '</tbody></table>';
+        contenedor.innerHTML = htmlTabla;
+    } catch (error) {
+        contenedor.innerHTML = `<div class="mensaje-error">Error al cargar usuarios: ${error.message}</div>`;
+    }
+}
+
+// Lógica de ruteo simple: detecta en qué página estamos y ejecuta la función correspondiente
+const rutaActual = window.location.pathname;
+
+if (rutaActual.includes('libros.html')) {
     cargarLibros();
+} else if (rutaActual.includes('prestamos.html')) {
+    cargarPrestamos();
+} else if (rutaActual.includes('usuarios.html')) {
+    cargarUsuarios();
 }
