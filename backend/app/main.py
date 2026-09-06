@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routers import prestamos, libros, usuarios
+from .routers import prestamos, libros, usuarios, autores, editoriales, categorias, clientes
 
 app = FastAPI(
     title="Sistema de Préstamos/Biblioteca",
