@@ -1,6 +1,67 @@
 /* Estilos base — a completar por el encargado de frontend */
-
+/* Layout y tipografía base */
 body {
-  font-family: system-ui, sans-serif;
-  margin: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+.navbar {
+    background-color: #2c3e50;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #ecf0f1;
+    text-decoration: none;
+    margin-left: 1.5rem;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Tablas para renderizar datos */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: white;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th { background-color: #34495e; color: white; }
+
+/* Estados de UI (Carga y Errores) */
+.mensaje-cargando {
+    color: #2980b9;
+    font-weight: bold;
+    text-align: center;
+    padding: 2rem;
+}
+
+.mensaje-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin-bottom: 1rem;
 }
