@@ -22,24 +22,17 @@ async function obtenerDatos(endpoint) {
 // Función específica para renderizar la tabla de libros
 async function cargarLibros() {
     const contenedor = document.getElementById('contenedor-principal');
-    
-    // Estado de carga
     contenedor.innerHTML = '<div class="mensaje-cargando">Cargando libros...</div>';
 
     try {
-        const libros = await obtenerDatos('/libros');
-        
-        // Construcción de la tabla
+        const data = await obtenerDatos('/libros/');
+        const libros = data.libros; // el objeto viene envuelto en {"libros": [...]}
+
         let htmlTabla = `
             <h2>Lista de Libros</h2>
             <table>
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Título</th>
-                        <th>Año</th>
-                        <th>Estado</th>
-                    </tr>
+                    <tr><th>ID</th><th>Título</th><th>Año</th><th>Estado</th></tr>
                 </thead>
                 <tbody>
         `;
@@ -47,25 +40,18 @@ async function cargarLibros() {
         libros.forEach(libro => {
             htmlTabla += `
                 <tr>
-                    <td>${libro.id}</td>
-                    <td>${libro.titulo}</td>
-                    <td>${libro.anio}</td>
-                    <td>${libro.disponible ? 'Disponible' : 'Prestado'}</td>
+                    <td>${libro.LIBRO_ID}</td>
+                    <td>${libro.TITULO}</td>
+                    <td>${libro.ANIO_PUBLICACION}</td>
+                    <td>${libro.DISPONIBLE ? 'Disponible' : 'Prestado'}</td>
                 </tr>
             `;
         });
 
         htmlTabla += '</tbody></table>';
         contenedor.innerHTML = htmlTabla;
-
     } catch (error) {
-        // Estado de error visual para el usuario
-        contenedor.innerHTML = `
-            <div class="mensaje-error">
-                No se pudo cargar la lista de libros. Verifica que el backend esté encendido en http://localhost:8000.<br>
-                Detalle: ${error.message}
-            </div>
-        `;
+        contenedor.innerHTML = `<div class="mensaje-error">No se pudo cargar la lista de libros. Verifica que el backend esté encendido en http://localhost:8000.<br>Detalle: ${error.message}</div>`;
     }
 }
 
@@ -75,7 +61,9 @@ async function cargarPrestamos() {
     contenedor.innerHTML = '<div class="mensaje-cargando">Cargando préstamos...</div>';
 
     try {
-        const prestamos = await obtenerDatos('/prestamos');
+        const data = await obtenerDatos('/prestamos');
+        const prestamos = data.prestamos; // desempaquetar el objeto
+
         let htmlTabla = `
             <h2>Lista de Préstamos</h2>
             <table>
@@ -92,10 +80,10 @@ async function cargarPrestamos() {
         prestamos.forEach(p => {
             htmlTabla += `
                 <tr>
-                    <td>${p.id}</td>
-                    <td>${p.cliente}</td>
-                    <td>${p.fecha_prestamo}</td>
-                    <td>${p.estado}</td>
+                    <td>${p.PRESTAMO_ID}</td>
+                    <td>${p.CLIENTE_ID}</td>
+                    <td>${p.FECHA_PRESTAMO}</td>
+                    <td>${p.ESTADO_PRESTAMOS_ID}</td>
                 </tr>
             `;
         });
@@ -112,7 +100,9 @@ async function cargarUsuarios() {
     contenedor.innerHTML = '<div class="mensaje-cargando">Cargando usuarios...</div>';
 
     try {
-        const usuarios = await obtenerDatos('/usuarios');
+        const data = await obtenerDatos('/usuarios');
+        const usuarios = data.usuarios; // desempaquetar el objeto
+
         let htmlTabla = `
             <h2>Directorio de Usuarios</h2>
             <table>
@@ -128,9 +118,9 @@ async function cargarUsuarios() {
         usuarios.forEach(u => {
             htmlTabla += `
                 <tr>
-                    <td>${u.username}</td>
-                    <td>${u.nombre} ${u.apellido_p}</td>
-                    <td>${u.cargo}</td>
+                    <td>${u.USERNAME}</td>
+                    <td>${u.NOMBRE} ${u.APELLIDO_P}</td>
+                    <td>${u.CARGO_ID}</td>
                 </tr>
             `;
         });
