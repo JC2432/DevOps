@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Préstamos - Biblioteca</title>
+    <title>Clientes - Biblioteca</title>
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar">
-            <div class="sidebar-brand">
-                <div class="brand-logo">B</div>
-                <h2>Biblioteca</h2>
-            </div>
+            <div class="sidebar-brand"><div class="brand-logo">B</div><h2>Biblioteca</h2></div>
             <nav class="sidebar-menu">
     <div class="menu-section">
         <p class="section-title">GENERAL</p>
@@ -38,44 +35,36 @@
         <main class="main-content">
             <header class="top-header">
                 <div class="header-titles">
-                    <h1>Préstamos</h1>
-                    <p>Control de préstamos y devoluciones</p>
-                    <button class="btn-primary" onclick="abrirModalPrestamo('nuevo')">+ Nuevo Préstamo</button>
+                    <h1>Directorio de Clientes</h1>
+                    <p>Gestión de miembros de la biblioteca</p>
                 </div>
+                <button class="btn-primary" onclick="abrirModalCliente('nuevo')">+ Nuevo Cliente</button>
             </header>
             <section class="dashboard-panels">
                 <div class="panel table-panel" style="grid-column: span 2;">
                     <table class="modern-table">
                         <thead>
-                            <tr>
-                                <th>ID PRÉSTAMO</th>
-                                <th>CLIENTE</th>
-                                <th>FECHA PRÉSTAMO</th>
-                                <th>ESTADO</th>
-                                <th>ACCIONES</th> <!-- Agregamos esta columna -->
-                            </tr>
+                            <tr><th>ID</th><th>NOMBRE COMPLETO</th><th>CORREO</th><th>TELÉFONO</th><th>ACCIONES</th></tr>
                         </thead>
-                        <tbody id="tabla-prestamos">
-                            <tr><td colspan="5">Cargando préstamos...</td></tr>
+                        <tbody id="tabla-clientes">
+                            <tr><td colspan="5">Cargando clientes...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </section>
-            <!-- MODAL DE PRÉSTAMOS -->
-            <div id="modal-prestamo" class="modal">
+            
+            <div id="modal-cliente" class="modal">
                 <div class="modal-content">
-                    <h2 id="modal-prestamo-titulo">Nuevo Préstamo</h2>
-                    <form id="form-prestamo">
-                        <input type="text" id="prest-id" placeholder="ID Préstamo (ej. P001)" required>
-                        <input type="text" id="prest-estado" placeholder="ID Estado (ej. EP01)" required>
-                        <input type="text" id="prest-cliente" placeholder="ID Cliente (ej. CL01)" required>
-                        <input type="text" id="prest-usuario" placeholder="ID Usuario que lo atiende (ej. U001)" required>
-                        <label style="font-size: 0.8rem; color: var(--text-muted)">Fecha Préstamo:</label>
-                        <input type="date" id="prest-fechap" required>
-                        <label style="font-size: 0.8rem; color: var(--text-muted)">Fecha Devolución:</label>
-                        <input type="date" id="prest-fechad" required>
+                    <h2 id="modal-cliente-titulo">Nuevo Cliente</h2>
+                    <form id="form-cliente">
+                        <input type="text" id="cli-id" placeholder="ID (ej. CL01)" required>
+                        <input type="text" id="cli-nombre" placeholder="Nombre" required>
+                        <input type="text" id="cli-apellidop" placeholder="Apellido Paterno" required>
+                        <input type="text" id="cli-apellidom" placeholder="Apellido Materno">
+                        <input type="email" id="cli-correo" placeholder="Correo Electrónico" required>
+                        <input type="text" id="cli-telefono" placeholder="Teléfono" required>
                         <div class="modal-actions">
-                            <button type="button" class="btn-outline" onclick="cerrarModalPrestamo()">Cancelar</button>
+                            <button type="button" class="btn-outline" onclick="cerrarModalCliente()">Cancelar</button>
                             <button type="submit" class="btn-primary">Guardar</button>
                         </div>
                     </form>

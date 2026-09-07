@@ -4,25 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Libros - Biblioteca</title>
-    <!-- El ../ indica que debe salir de la carpeta pages para encontrar el CSS -->
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <h2>Biblioteca</h2>
-        <div class="nav-links">
-            <a href="../index.html">Inicio</a>
-            <a href="libros.html">Libros</a>
-            <a href="prestamos.html">Préstamos</a>
-            <a href="usuarios.html">Usuarios</a>
-        </div>
-    </nav>
+    <div class="app-container">
+        <!-- BARRA LATERAL -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">B</div>
+                <h2>Biblioteca</h2>
+            </div>
+            <nav class="sidebar-menu">
+    <div class="menu-section">
+        <p class="section-title">GENERAL</p>
+        <a href="../index.html" class="menu-item"><span class="icon">DB</span> Dashboard</a>
+    </div>
+    <div class="menu-section">
+        <p class="section-title">CATÁLOGO</p>
+        <a href="libros.html" class="menu-item"><span class="icon">LB</span> Libros</a>
+        <a href="categoria.html" class="menu-item"><span class="icon">CA</span> Categorías</a>
+    </div>
+    <div class="menu-section">
+        <p class="section-title">CIRCULACIÓN</p>
+        <a href="prestamos.html" class="menu-item"><span class="icon">PR</span> Préstamos</a>
+        <a href="clientes.html" class="menu-item"><span class="icon">CL</span> Clientes</a>
+    </div>
+    <div class="menu-section">
+        <p class="section-title">ADMINISTRACIÓN</p>
+        <a href="usuarios.html" class="menu-item"><span class="icon">US</span> Usuarios</a>
+    </div>
+</nav>
+        </aside>
+        <!-- Main -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1>Catálogo de Libros</h1>
+                    <p>Gestión del catálogo y disponibilidad</p>
+                </div>
+                <!-- Este botón ahora abre el pop-up -->
+                <button class="btn-primary" onclick="abrirModal('nuevo')">+ Nuevo Libro</button>
+            </header>
 
-    <main id="contenedor-principal">
-        <!-- El contenido será inyectado aquí por app.js -->
-    </main>
+            <section class="dashboard-panels">
+                <div class="panel table-panel" style="grid-column: span 2;">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>TÍTULO</th>
+                                <th>AÑO</th>
+                                <th>ESTADO</th>
+                                <th>ACCIONES</th> <!-- Nueva columna -->
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-libros">
+                            <tr><td colspan="5">Cargando libros...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-    <!-- El ../ indica que debe salir de la carpeta pages para encontrar el JS -->
+            <!-- MODAL FORMULARIO OCULTO -->
+            <div id="modal-libro" class="modal">
+                <div class="modal-content">
+                    <h2 id="modal-titulo">Nuevo Libro</h2>
+                    <form id="form-libro">
+                        <input type="text" id="libro-id" placeholder="ID (ej. L010)" required>
+                        <!-- OJO: MySQL exige que la editorial exista, usa la que creaste (ej. ED01) -->
+                        <input type="text" id="libro-editorial" placeholder="ID Editorial (ej. ED01)" required>
+                        <input type="text" id="libro-titulo" placeholder="Título" required>
+                        <input type="number" id="libro-anio" placeholder="Año de publicación" required>
+                        <select id="libro-estado">
+                            <option value="true">Disponible</option>
+                            <option value="false">No disponible</option>
+                        </select>
+                        <div class="modal-actions">
+                            <button type="button" class="btn-outline" onclick="cerrarModal()">Cancelar</button>
+                            <button type="submit" class="btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
     <script src="../app.js"></script>
 </body>
 </html>

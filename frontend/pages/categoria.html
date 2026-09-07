@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios - Biblioteca</title>
+    <title>Categorías - Biblioteca</title>
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar">
-            <div class="sidebar-brand">
-                <div class="brand-logo">B</div>
-                <h2>Biblioteca</h2>
-            </div>
+            <div class="sidebar-brand"><div class="brand-logo">B</div><h2>Biblioteca</h2></div>
+            <!-- Pega aquí el mismo <nav class="sidebar-menu"> unificado del Paso 1 (y ponle la clase "active" a Categorías) -->
             <nav class="sidebar-menu">
     <div class="menu-section">
         <p class="section-title">GENERAL</p>
@@ -38,42 +36,33 @@
         <main class="main-content">
             <header class="top-header">
                 <div class="header-titles">
-                    <h1>Directorio de Usuarios</h1>
-                    <p>Gestión del personal del sistema</p>
-                    <button class="btn-primary" onclick="abrirModalUsuario('nuevo')">+ Nuevo Usuario</button>
+                    <h1>Categorías</h1>
+                    <p>Organización del catálogo</p>
                 </div>
+                <button class="btn-primary" onclick="abrirModalCat('nuevo')">+ Nueva Categoría</button>
             </header>
+
             <section class="dashboard-panels">
-                <div class="panel table-panel" style="grid-column: span 2;">
+                <div class="panel table-panel">
                     <table class="modern-table">
                         <thead>
-                            <tr>
-                                <th>USERNAME</th>
-                                <th>NOMBRE COMPLETO</th>
-                                <th>ROL</th>
-                                <th>ACCIONES</th> <!-- Agregamos esta columna -->
-                            </tr>
+                            <tr><th>ID</th><th>NOMBRE</th><th>ACCIONES</th></tr>
                         </thead>
-                        <tbody id="tabla-usuarios">
-                            <tr><td colspan="4">Cargando usuarios...</td></tr>
+                        <tbody id="tabla-categorias">
+                            <tr><td colspan="3">Cargando...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </section>
-            <!-- MODAL DE USUARIOS -->
-            <div id="modal-usuario" class="modal">
+
+            <div id="modal-categoria" class="modal">
                 <div class="modal-content">
-                    <h2>Nuevo Usuario</h2>
-                    <form id="form-usuario">
-                        <input type="text" id="usr-id" placeholder="ID (ej. U005)" required>
-                        <input type="text" id="usr-cargo" placeholder="ID Cargo (ej. C001)" required>
-                        <input type="text" id="usr-username" placeholder="Nombre de usuario" required>
-                        <input type="password" id="usr-password" placeholder="Contraseña" required>
-                        <input type="text" id="usr-nombre" placeholder="Nombre real" required>
-                        <input type="text" id="usr-apellidop" placeholder="Apellido Paterno" required>
-                        <input type="text" id="usr-apellidom" placeholder="Apellido Materno">
+                    <h2 id="modal-cat-titulo">Nueva Categoría</h2>
+                    <form id="form-categoria">
+                        <input type="text" id="cat-id" placeholder="ID (ej. C001)" required>
+                        <input type="text" id="cat-nombre" placeholder="Nombre (ej. Terror)" required>
                         <div class="modal-actions">
-                            <button type="button" class="btn-outline" onclick="cerrarModalUsuario()">Cancelar</button>
+                            <button type="button" class="btn-outline" onclick="cerrarModalCat()">Cancelar</button>
                             <button type="submit" class="btn-primary">Guardar</button>
                         </div>
                     </form>

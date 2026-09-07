@@ -3,27 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Biblioteca</title>
-    <!-- Enlace al archivo de estilos -->
+    <title>Dashboard - Biblioteca</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <h2>Biblioteca</h2>
-        <div class="nav-links">
-            <a href="index.html">Inicio</a>
-            <a href="pages/libros.html">Libros</a>
-            <a href="pages/prestamos.html">Préstamos</a>
-            <a href="pages/usuarios.html">Usuarios</a>
-        </div>
-    </nav>
+    <div class="app-container">
+        <!-- BARRA LATERAL (SIDEBAR) -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">B</div>
+                <h2>Biblioteca</h2>
+            </div>
+           <nav class="sidebar-menu">
+    <div class="menu-section">
+        <p class="section-title">GENERAL</p>
+        <a href="index.html" class="menu-item active"><span class="icon">DB</span> Dashboard</a>
+    </div>
+    <div class="menu-section">
+        <p class="section-title">CATÁLOGO</p>
+        <a href="pages/libros.html" class="menu-item"><span class="icon">LB</span> Libros</a>
+        <a href="pages/categoria.html" class="menu-item"><span class="icon">CA</span> Categorías</a>
+    </div>
+    <div class="menu-section">
+        <p class="section-title">CIRCULACIÓN</p>
+        <a href="pages/prestamos.html" class="menu-item"><span class="icon">PR</span> Préstamos</a>
+        <a href="pages/clientes.html" class="menu-item"><span class="icon">CL</span> Clientes</a>
+    </div>
+    <div class="menu-section">
+        <p class="section-title">ADMINISTRACIÓN</p>
+        <a href="pages/usuarios.html" class="menu-item"><span class="icon">US</span> Usuarios</a>
+    </div>
+</nav>
+        </aside>
 
-    <main id="contenedor-principal">
-        <h1>Bienvenido al panel de administración</h1>
-        <p>Selecciona una opción en el menú superior para comenzar.</p>
-    </main>
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1>Dashboard</h1>
+                    <p>Resumen general del sistema</p>
+                </div>
+            </header>
 
-    <!-- Enlace al archivo de lógica -->
+            <!-- TARJETAS DE MÉTRICAS (Vacías, esperando a JS) -->
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon bg-blue">LB</div>
+                    <div class="kpi-data">
+                        <h3 id="kpi-libros">-</h3><p>Total Libros</p>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon bg-green">OK</div>
+                    <div class="kpi-data">
+                        <h3 id="kpi-disponibles">-</h3><p>Disponibles</p>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon bg-lightblue">PR</div>
+                    <div class="kpi-data">
+                        <h3 id="kpi-activos">-</h3><p>Préstamos Activos</p>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon bg-purple">US</div>
+                    <div class="kpi-data">
+                        <h3 id="kpi-usuarios">-</h3><p>Total Usuarios</p>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon bg-red">VN</div>
+                    <div class="kpi-data">
+                        <h3 id="kpi-vencidos">-</h3><p>Vencidos</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-panels">
+                <div class="panel table-panel" style="grid-column: span 2;">
+                    <div class="panel-header">
+                        <h2>Préstamos Recientes</h2>
+                    </div>
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>CLIENTE</th>
+                                <th>ID PRÉSTAMO</th>
+                                <th>FECHA PRÉSTAMO</th>
+                                <th>ESTADO</th>
+                            </tr>
+                        </thead>
+                        <!-- Cuerpo de la tabla vacío esperando a JS -->
+                        <tbody id="tabla-dashboard-prestamos">
+                            <tr><td colspan="4">Cargando métricas...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
