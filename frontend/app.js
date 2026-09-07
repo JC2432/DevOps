@@ -81,9 +81,9 @@ async function cargarPrestamos() {
             htmlTabla += `
                 <tr>
                     <td>${p.PRESTAMO_ID}</td>
-                    <td>${p.CLIENTE_ID}</td>
+                    <td>${p.CLIENTE_NOMBRE}</td>
                     <td>${p.FECHA_PRESTAMO}</td>
-                    <td>${p.ESTADO_PRESTAMOS_ID}</td>
+                    <td>${p.ESTADO_NOMBRE}</td>
                 </tr>
             `;
         });
@@ -120,7 +120,7 @@ async function cargarUsuarios() {
                 <tr>
                     <td>${u.USERNAME}</td>
                     <td>${u.NOMBRE} ${u.APELLIDO_P}</td>
-                    <td>${u.CARGO_ID}</td>
+                    <td>${u.CARGO_NOMBRE}</td>
                 </tr>
             `;
         });
