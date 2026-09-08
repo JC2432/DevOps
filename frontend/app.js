@@ -11,7 +11,11 @@ async function obtenerDatos(endpoint) {
 // ------------------------------------------
 async function cargarDashboard() {
     try {
-        const [libros, prestamos, usuarios] = await Promise.all([ obtenerDatos('/libros'), obtenerDatos('/prestamos'), obtenerDatos('/usuarios') ]);
+        const [libros, prestamos, usuarios] = await Promise.all([
+            obtenerDatos('/libros'),
+            obtenerDatos('/prestamos'),
+            obtenerDatos('/usuarios'),
+        ]);
         document.getElementById('kpi-libros').innerText = libros.length;
         document.getElementById('kpi-disponibles').innerText = libros.filter(l => l.disponible).length;
         document.getElementById('kpi-activos').innerText = prestamos.filter(p => p.estado.toUpperCase() === 'ACTIVO').length;
@@ -22,21 +26,21 @@ async function cargarDashboard() {
         tbody.innerHTML = '';
         prestamos.slice(-3).reverse().forEach(p => {
             let badgeClass = p.estado.toUpperCase() === 'VENCIDO' ? 'red' : 'blue';
-            tbody.innerHTML += `<tr><td><strong>${p.cliente}</strong></td><td>#${p.id}</td><td>${p.fecha_prestamo}</td><td><span class="status-badge ${badgeClass}">${p.estado}</span></td></tr>`;
+            tbody.innerHTML += `<tr><td><strong>${p.cliente_nombre}</strong></td><td>#${p.id}</td><td>${p.fecha_prestamo}</td><td><span class="status-badge ${badgeClass}">${p.estado}</span></td></tr>`;
         });
     } catch (error) { console.error("Error Dashboard:", error); }
 }
 
 async function cargarLibros() {
     const tbody = document.getElementById('tabla-libros');
-    if (!tbody) return; 
+    if (!tbody) return;
     try {
         const libros = await obtenerDatos('/libros');
-        tbody.innerHTML = ''; 
+        tbody.innerHTML = '';
         libros.forEach(libro => {
             let badgeClass = libro.disponible ? 'green' : 'red';
             let textoDisp = libro.disponible ? 'Disponible' : 'No disponible';
-            
+
             tbody.innerHTML += `
                 <tr>
                     <td><strong>${libro.id}</strong></td>
@@ -69,7 +73,7 @@ async function cargarUsuarios() {
                     <td>${u.nombre} ${u.apellido_p}</td>
                     <td><span class="status-badge blue">${u.cargo}</span></td>
                     <td>
-                        <button class="btn-edit" onclick="abrirModalUsuario('editar', '${u.id}', '${u.cargo_id}', '${u.username}', '${u.password}', '${u.nombre}', '${u.apellido_p}', '${u.apellido_m}')">Editar</button>
+                        <button class="btn-edit" onclick="abrirModalUsuario('editar', '${u.id}', '${u.cargo_id}', '${u.username}', '', '${u.nombre}', '${u.apellido_p}', '${u.apellido_m || ''}')">Editar</button>
                         <button class="btn-danger" onclick="eliminarUsuario('${u.id}')">Eliminar</button>
                     </td>
                 </tr>`;
@@ -92,7 +96,7 @@ async function cargarPrestamos() {
                     <td>${p.fecha_prestamo}</td>
                     <td><span class="status-badge ${badgeClass}">${p.estado}</span></td>
                     <td>
-                        <button class="btn-edit" onclick="abrirModalPrestamo('editar', '${p.id}', '${p.estado_id}', '${p.cliente_id}', '${p.usuario_id}', '${p.fecha_prestamo}', '${p.fecha_devolucion}')">Editar</button>
+                        <button class="btn-edit" onclick="abrirModalPrestamo('editar', '${p.id}', '${p.estado_id}', '${p.cliente_id}', '${p.usuario_id}', '${p.fecha_prestamo}', '${p.fecha_devolucion || ''}')">Editar</button>
                         <button class="btn-danger" onclick="eliminarPrestamo('${p.id}')">Eliminar</button>
                     </td>
                 </tr>`;
@@ -109,7 +113,7 @@ function abrirModalUsuario(modo, id='', cargo='', username='', password='', nomb
     modoEdicionUsuario = (modo === 'editar');
     const titulo = document.querySelector('#modal-usuario h2');
     if (titulo) titulo.innerText = modoEdicionUsuario ? 'Editar Usuario' : 'Nuevo Usuario';
-    
+
     document.getElementById('usr-id').value = id;
     document.getElementById('usr-id').disabled = modoEdicionUsuario;
     document.getElementById('usr-cargo').value = cargo;
@@ -118,7 +122,7 @@ function abrirModalUsuario(modo, id='', cargo='', username='', password='', nomb
     document.getElementById('usr-nombre').value = nombre;
     document.getElementById('usr-apellidop').value = ap;
     document.getElementById('usr-apellidom').value = am;
-    
+
     document.getElementById('modal-usuario').classList.add('active');
 }
 
@@ -139,6 +143,8 @@ document.getElementById('form-usuario')?.addEventListener('submit', async (e) =>
         apellido_p: document.getElementById('usr-apellidop').value,
         apellido_m: document.getElementById('usr-apellidom').value
     };
+    // Si estamos editando y no se escribió una contraseña nueva, no la mandamos
+    if (modoEdicionUsuario && !data.password) delete data.password;
 
     const metodo = modoEdicionUsuario ? 'PUT' : 'POST';
     const endpoint = modoEdicionUsuario ? `/usuarios/${id}` : '/usuarios';
@@ -149,7 +155,8 @@ document.getElementById('form-usuario')?.addEventListener('submit', async (e) =>
         });
         if (!res.ok) throw new Error("Error al guardar. Revisa que el ID del Cargo exista en tu Base de Datos.");
         cerrarModalUsuario();
-        cargarUsuarios(); 
+        cargarUsuarios();
+        if (document.getElementById('kpi-usuarios')) cargarDashboard();
     } catch (error) { alert(error.message); }
 });
 
@@ -161,7 +168,7 @@ let modoEdicionPrestamo = false;
 function abrirModalPrestamo(modo, id='', estado='', cliente='', usuario='', fechap='', fechad='') {
     modoEdicionPrestamo = (modo === 'editar');
     document.getElementById('modal-prestamo-titulo').innerText = modoEdicionPrestamo ? 'Editar Préstamo' : 'Nuevo Préstamo';
-    
+
     document.getElementById('prest-id').value = id;
     document.getElementById('prest-id').disabled = modoEdicionPrestamo;
     document.getElementById('prest-estado').value = estado;
@@ -169,7 +176,7 @@ function abrirModalPrestamo(modo, id='', estado='', cliente='', usuario='', fech
     document.getElementById('prest-usuario').value = usuario;
     document.getElementById('prest-fechap').value = fechap;
     document.getElementById('prest-fechad').value = fechad;
-    
+
     document.getElementById('modal-prestamo').classList.add('active');
 }
 
@@ -181,13 +188,15 @@ function cerrarModalPrestamo() {
 document.getElementById('form-prestamo')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('prest-id').value;
+    const fechaDevolucion = document.getElementById('prest-fechad').value;
     const data = {
-        id: id,
+        id: id || undefined,
         estado_prestamos_id: document.getElementById('prest-estado').value,
         cliente_id: document.getElementById('prest-cliente').value,
         usuario_id: document.getElementById('prest-usuario').value,
         fecha_prestamo: document.getElementById('prest-fechap').value,
-        fecha_devolucion: document.getElementById('prest-fechad').value
+        // Un string vacío no es una fecha válida para el backend: mandamos null en ese caso
+        fecha_devolucion: fechaDevolucion ? fechaDevolucion : null
     };
 
     const metodo = modoEdicionPrestamo ? 'PUT' : 'POST';
@@ -200,11 +209,12 @@ document.getElementById('form-prestamo')?.addEventListener('submit', async (e) =
         if (!res.ok) throw new Error("Error al guardar. Verifica que el Cliente, Estado y Usuario existan.");
         cerrarModalPrestamo();
         cargarPrestamos();
+        if (document.getElementById('kpi-libros')) cargarDashboard();
     } catch (error) { alert(error.message); }
 });
 
 // ------------------------------------------
-// LÓGICA DE CRUD (AGREGAR, EDITAR, ELIMINAR)
+// LÓGICA DE CRUD DE LIBROS
 // ------------------------------------------
 let modoEdicion = false;
 
@@ -217,7 +227,7 @@ function abrirModal(modo, id='', titulo='', anio='', editorial='', disponible=tr
     document.getElementById('libro-anio').value = anio;
     document.getElementById('libro-editorial').value = editorial;
     document.getElementById('libro-estado').value = disponible;
-    
+
     document.getElementById('modal-libro').classList.add('active');
 }
 
@@ -226,7 +236,6 @@ function cerrarModal() {
     document.getElementById('form-libro').reset();
 }
 
-// Escuchar cuando el usuario hace clic en "Guardar"
 document.getElementById('form-libro')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('libro-id').value;
@@ -249,47 +258,28 @@ document.getElementById('form-libro')?.addEventListener('submit', async (e) => {
         });
         if (!res.ok) throw new Error("Revisa que el ID de Editorial exista y que el ID del libro no esté repetido.");
         cerrarModal();
-        cargarLibros(); // Recargar la tabla automáticamente
-        if(document.getElementById('kpi-libros')) cargarDashboard(); // Actualizar dashboard si está abierto
+        cargarLibros();
+        if (document.getElementById('kpi-libros')) cargarDashboard();
     } catch (error) { alert(error.message); }
 });
 
-// Función del botón rojo
 async function eliminarLibro(id) {
     if (!confirm(`¿Estás seguro de eliminar el libro ${id}?`)) return;
     try {
         const res = await fetch(`${API_URL}/libros/${id}`, { method: 'DELETE' });
         if (!res.ok) throw new Error("No se pudo eliminar el libro (puede que esté asignado a un préstamo).");
         cargarLibros();
+        if (document.getElementById('kpi-libros')) cargarDashboard();
     } catch (error) { alert(error.message); }
 }
 
-// ==========================================
-// RUTEO SEGURO (Basado en elementos HTML)
-// ==========================================
-// Dependiendo de la tabla que exista en la pantalla, cargamos sus datos.
-if (document.getElementById('tabla-dashboard-prestamos')) {
-    cargarDashboard();
-}
-if (document.getElementById('tabla-libros')) {
-    cargarLibros();
-}
-if (document.getElementById('tabla-prestamos')) {
-    cargarPrestamos();
-}
-if (document.getElementById('tabla-usuarios')) {
-    cargarUsuarios();
-}
-
-// ==========================================
-// FUNCIONES DE ELIMINAR
-// ==========================================
 async function eliminarUsuario(id) {
     if (!confirm(`¿Eliminar al usuario ${id}?`)) return;
     try {
         const res = await fetch(`${API_URL}/usuarios/${id}`, { method: 'DELETE' });
         if (!res.ok) throw new Error("No se puede eliminar (quizás tiene préstamos asociados).");
         cargarUsuarios();
+        if (document.getElementById('kpi-usuarios')) cargarDashboard();
     } catch (error) { alert(error.message); }
 }
 
@@ -299,12 +289,15 @@ async function eliminarPrestamo(id) {
         const res = await fetch(`${API_URL}/prestamos/${id}`, { method: 'DELETE' });
         if (!res.ok) throw new Error("No se pudo eliminar el préstamo.");
         cargarPrestamos();
+        if (document.getElementById('kpi-libros')) cargarDashboard();
     } catch (error) { alert(error.message); }
 }
 
 // ==========================================
 // LÓGICA DE CLIENTES (CRUD COMPLETO)
 // ==========================================
+let modoEdicionCliente = false;
+
 async function cargarClientes() {
     const tbody = document.getElementById('tabla-clientes');
     if (!tbody) return;
@@ -317,9 +310,9 @@ async function cargarClientes() {
                     <td><strong>${c.id}</strong></td>
                     <td>${c.nombre} ${c.apellido_p}</td>
                     <td>${c.correo}</td>
-                    <td>${c.telefono}</td>
+                    <td>${c.telefono || ''}</td>
                     <td>
-                        <button class="btn-edit" onclick="abrirModalCliente('editar', '${c.id}', '${c.nombre}', '${c.correo}', '${c.telefono}', '${c.apellido_p}', '${c.apellido_m}')">Editar</button>
+                        <button class="btn-edit" onclick="abrirModalCliente('editar', '${c.id}', '${c.nombre}', '${c.correo}', '${c.telefono || ''}', '${c.apellido_p}', '${c.apellido_m || ''}')">Editar</button>
                         <button class="btn-danger" onclick="eliminarCliente('${c.id}')">Eliminar</button>
                     </td>
                 </tr>`;
@@ -330,7 +323,7 @@ async function cargarClientes() {
 function abrirModalCliente(modo, id='', nombre='', correo='', telefono='', ap='', am='') {
     modoEdicionCliente = (modo === 'editar');
     document.getElementById('modal-cliente-titulo').innerText = modoEdicionCliente ? 'Editar Cliente' : 'Nuevo Cliente';
-    
+
     document.getElementById('cli-id').value = id;
     document.getElementById('cli-id').disabled = modoEdicionCliente;
     document.getElementById('cli-nombre').value = nombre;
@@ -338,7 +331,7 @@ function abrirModalCliente(modo, id='', nombre='', correo='', telefono='', ap=''
     document.getElementById('cli-telefono').value = telefono;
     document.getElementById('cli-apellidop').value = ap;
     document.getElementById('cli-apellidom').value = am;
-    
+
     document.getElementById('modal-cliente').classList.add('active');
 }
 
@@ -366,7 +359,7 @@ document.getElementById('form-cliente')?.addEventListener('submit', async (e) =>
         const res = await fetch(`${API_URL}${endpoint}`, {
             method: metodo, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
         });
-        if (!res.ok) throw new Error("Error al guardar. Verifica los datos.");
+        if (!res.ok) throw new Error("Error al guardar cliente.");
         cerrarModalCliente();
         cargarClientes();
     } catch (error) { alert(error.message); }
@@ -381,14 +374,11 @@ async function eliminarCliente(id) {
     } catch (error) { alert(error.message); }
 }
 
-// Activar la ruta de clientes
-if (document.getElementById('tabla-clientes')) {
-    cargarClientes();
-}
-
 // ==========================================
 // LÓGICA DE CATEGORÍAS
 // ==========================================
+let modoEdicionCat = false;
+
 async function cargarCategorias() {
     const tbody = document.getElementById('tabla-categorias');
     if (!tbody) return;
@@ -409,7 +399,6 @@ async function cargarCategorias() {
     } catch (error) { tbody.innerHTML = `<tr><td colspan="3" class="mensaje-error">Error: ${error.message}</td></tr>`; }
 }
 
-let modoEdicionCat = false;
 function abrirModalCat(modo, id='', nombre='') {
     modoEdicionCat = (modo === 'editar');
     document.getElementById('modal-cat-titulo').innerText = modoEdicionCat ? 'Editar Categoría' : 'Nueva Categoría';
@@ -418,6 +407,7 @@ function abrirModalCat(modo, id='', nombre='') {
     document.getElementById('cat-nombre').value = nombre;
     document.getElementById('modal-categoria').classList.add('active');
 }
+
 function cerrarModalCat() {
     document.getElementById('modal-categoria').classList.remove('active');
     document.getElementById('form-categoria').reset();
@@ -432,88 +422,27 @@ document.getElementById('form-categoria')?.addEventListener('submit', async (e) 
         const res = await fetch(`${API_URL}${endpoint}`, {
             method: modoEdicionCat ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
         });
-        if (!res.ok) throw new Error("Error al guardar.");
-        cerrarModalCat(); cargarCategorias();
+        if (!res.ok) throw new Error("Error al guardar la categoría.");
+        cerrarModalCat();
+        cargarCategorias();
     } catch (error) { alert(error.message); }
 });
 
 async function eliminarCategoria(id) {
     if (!confirm(`¿Eliminar la categoría ${id}?`)) return;
     try {
-        await fetch(`${API_URL}/categorias/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/categorias/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error("No se pudo eliminar (puede que esté asignada a un libro).");
         cargarCategorias();
-    } catch (error) { alert("Error al eliminar."); }
-}
-
-if (document.getElementById('tabla-categorias')) cargarCategorias();
-
-// ==========================================
-// LÓGICA DE CLIENTES
-// ==========================================
-async function cargarClientes() {
-    const tbody = document.getElementById('tabla-clientes');
-    if (!tbody) return;
-    try {
-        const clientes = await obtenerDatos('/clientes');
-        tbody.innerHTML = '';
-        clientes.forEach(c => {
-            tbody.innerHTML += `
-                <tr>
-                    <td><strong>${c.id}</strong></td>
-                    <td>${c.nombre} ${c.apellido_p}</td>
-                    <td>${c.correo}</td>
-                    <td>${c.telefono}</td>
-                    <td>
-                        <button class="btn-edit" onclick="abrirModalCliente('editar', '${c.id}', '${c.nombre}', '${c.correo}', '${c.telefono}', '${c.apellido_p}', '${c.apellido_m}')">Editar</button>
-                        <button class="btn-danger" onclick="eliminarCliente('${c.id}')">Eliminar</button>
-                    </td>
-                </tr>`;
-        });
-    } catch (error) { tbody.innerHTML = `<tr><td colspan="5" class="mensaje-error">Error: ${error.message}</td></tr>`; }
-}
-
-let modoEdicionCliente = false;
-function abrirModalCliente(modo, id='', nombre='', correo='', telefono='', ap='', am='') {
-    modoEdicionCliente = (modo === 'editar');
-    document.getElementById('modal-cliente-titulo').innerText = modoEdicionCliente ? 'Editar Cliente' : 'Nuevo Cliente';
-    document.getElementById('cli-id').value = id;
-    document.getElementById('cli-id').disabled = modoEdicionCliente;
-    document.getElementById('cli-nombre').value = nombre;
-    document.getElementById('cli-correo').value = correo;
-    document.getElementById('cli-telefono').value = telefono;
-    document.getElementById('cli-apellidop').value = ap;
-    document.getElementById('cli-apellidom').value = am;
-    document.getElementById('modal-cliente').classList.add('active');
-}
-function cerrarModalCliente() {
-    document.getElementById('modal-cliente').classList.remove('active');
-    document.getElementById('form-cliente').reset();
-}
-
-document.getElementById('form-cliente')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('cli-id').value;
-    const data = {
-        id: id, nombre: document.getElementById('cli-nombre').value, correo: document.getElementById('cli-correo').value,
-        telefono: document.getElementById('cli-telefono').value, apellido_p: document.getElementById('cli-apellidop').value,
-        apellido_m: document.getElementById('cli-apellidom').value
-    };
-    const endpoint = modoEdicionCliente ? `/clientes/${id}` : '/clientes';
-    try {
-        const res = await fetch(`${API_URL}${endpoint}`, {
-            method: modoEdicionCliente ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
-        });
-        if (!res.ok) throw new Error("Error al guardar cliente.");
-        cerrarModalCliente(); cargarClientes();
     } catch (error) { alert(error.message); }
-});
-
-async function eliminarCliente(id) {
-    if (!confirm(`¿Eliminar al cliente ${id}?`)) return;
-    try {
-        await fetch(`${API_URL}/clientes/${id}`, { method: 'DELETE' });
-        cargarClientes();
-    } catch (error) { alert("Error al eliminar."); }
 }
 
+// ==========================================
+// RUTEO SEGURO (Basado en elementos HTML)
+// ==========================================
+if (document.getElementById('tabla-dashboard-prestamos')) cargarDashboard();
+if (document.getElementById('tabla-libros')) cargarLibros();
+if (document.getElementById('tabla-prestamos')) cargarPrestamos();
+if (document.getElementById('tabla-usuarios')) cargarUsuarios();
 if (document.getElementById('tabla-clientes')) cargarClientes();
+if (document.getElementById('tabla-categorias')) cargarCategorias();
