@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* Degradado profesional moderno */
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); 
+}
+
+.login-container {
+    background-color: #ffffff;
+    padding: 40px 35px;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 380px;
+    /* Animación de entrada al cargar la página */
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #1a2935;
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #4a5568;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #2d3748;
+    outline: none;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+}
+
+/* Efecto de iluminación cuando seleccionas un campo */
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #3182ce;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    box-shadow: 0 4px 6px rgba(43, 108, 176, 0.2);
+}
+
+/* Efecto al pasar el mouse por el botón */
+button:hover {
+    background: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(43, 108, 176, 0.3);
+}
+
+/* Efecto al hacer clic en el botón */
+button:active {
+    transform: translateY(0);
+}
+
+.error {
+    color: #e53e3e;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 13px;
+    font-weight: 500;
+    min-height: 20px;
+} 
