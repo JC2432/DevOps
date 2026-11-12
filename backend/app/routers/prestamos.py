@@ -4,6 +4,8 @@ from ..schemas import PrestamoIn, PrestamoUpdateIn
 
 router = APIRouter(prefix="/prestamos", tags=["prestamos"])
 
+ESTADO_DEVUELTO = "S002"
+
 CAMPOS_PRESTAMO = """
     p.PRESTAMO_ID AS id,
     p.ESTADO_PRESTAMOS_ID AS estado_id,
@@ -38,7 +40,10 @@ def obtener_prestamo(prestamo_id: str):
     conn = get_connection()
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute(f"SELECT {CAMPOS_PRESTAMO} {JOIN_PRESTAMO} WHERE p.PRESTAMO_ID = %s", (prestamo_id,))
+        cursor.execute(
+            f"SELECT {CAMPOS_PRESTAMO} {JOIN_PRESTAMO} WHERE p.PRESTAMO_ID = %s",
+            (prestamo_id,),
+        )
         prestamo = cursor.fetchone()
         if not prestamo:
             raise HTTPException(status_code=404, detail="Préstamo no encontrado")
@@ -69,7 +74,10 @@ def crear_prestamo(prestamo: PrestamoIn):
             raise HTTPException(status_code=400, detail="Estado de préstamo no existe")
 
         if prestamo.id:
-            cursor.execute("SELECT PRESTAMO_ID FROM PRESTAMOS WHERE PRESTAMO_ID = %s", (prestamo.id,))
+            cursor.execute(
+                "SELECT PRESTAMO_ID FROM PRESTAMOS WHERE PRESTAMO_ID = %s",
+                (prestamo.id,),
+            )
             if cursor.fetchone():
                 raise HTTPException(status_code=400, detail="Ya existe un préstamo con ese ID")
             nuevo_id = prestamo.id
@@ -79,7 +87,8 @@ def crear_prestamo(prestamo: PrestamoIn):
         cursor.execute(
             """
             INSERT INTO PRESTAMOS
-                (PRESTAMO_ID, ESTADO_PRESTAMOS_ID, CLIENTE_ID, USUARIO_ID, FECHA_PRESTAMO, FECHA_DEVOLUCION)
+                (PRESTAMO_ID, ESTADO_PRESTAMOS_ID, CLIENTE_ID, USUARIO_ID,
+                 FECHA_PRESTAMO, FECHA_DEVOLUCION)
             VALUES (%s, %s, %s, %s, %s, %s)
             """,
             (
@@ -90,13 +99,21 @@ def crear_prestamo(prestamo: PrestamoIn):
 
         if prestamo.libros:
             for item in prestamo.libros:
-                cursor.execute("SELECT DISPONIBLE FROM LIBROS WHERE LIBRO_ID = %s", (item.LIBRO_ID,))
+                cursor.execute(
+                    "SELECT DISPONIBLE FROM LIBROS WHERE LIBRO_ID = %s",
+                    (item.LIBRO_ID,),
+                )
                 libro = cursor.fetchone()
                 if not libro:
                     raise HTTPException(status_code=400, detail=f"Libro {item.LIBRO_ID} no existe")
                 if not libro["DISPONIBLE"]:
-                    raise HTTPException(status_code=400, detail=f"Libro {item.LIBRO_ID} no está disponible")
-                nuevo_detalle_id = generar_siguiente_id(cursor, "LIBROS_PRESTADOS", "PRESTADOS_ID", "LP", 2)
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Libro {item.LIBRO_ID} no está disponible",
+                    )
+                nuevo_detalle_id = generar_siguiente_id(
+                    cursor, "LIBROS_PRESTADOS", "PRESTADOS_ID", "LP", 2
+                )
                 cursor.execute(
                     """
                     INSERT INTO LIBROS_PRESTADOS (PRESTADOS_ID, PRESTAMO_ID, LIBRO_ID, CANTIDAD)
@@ -104,7 +121,10 @@ def crear_prestamo(prestamo: PrestamoIn):
                     """,
                     (nuevo_detalle_id, nuevo_id, item.LIBRO_ID, item.CANTIDAD),
                 )
-                cursor.execute("UPDATE LIBROS SET DISPONIBLE = FALSE WHERE LIBRO_ID = %s", (item.LIBRO_ID,))
+                cursor.execute(
+                    "UPDATE LIBROS SET DISPONIBLE = FALSE WHERE LIBRO_ID = %s",
+                    (item.LIBRO_ID,),
+                )
 
         conn.commit()
         return {"id": nuevo_id, "mensaje": "Préstamo registrado"}
@@ -135,7 +155,8 @@ def actualizar_prestamo(prestamo_id: str, datos: PrestamoUpdateIn):
         if not campos:
             raise HTTPException(status_code=400, detail="No se enviaron campos para actualizar")
         valores.append(prestamo_id)
-        cursor.execute(f"UPDATE PRESTAMOS SET {', '.join(campos)} WHERE PRESTAMO_ID = %s", tuple(valores))
+        sql = f"UPDATE PRESTAMOS SET {', '.join(campos)} WHERE PRESTAMO_ID = %s"
+        cursor.execute(sql, tuple(valores))
         conn.commit()
         return {"id": prestamo_id, "mensaje": "Préstamo actualizado"}
     finally:
@@ -154,14 +175,20 @@ def registrar_devolucion(prestamo_id: str):
         cursor.execute(
             """
             UPDATE PRESTAMOS
-            SET ESTADO_PRESTAMOS_ID = 'S002', FECHA_DEVOLUCION = CURDATE()
+            SET ESTADO_PRESTAMOS_ID = %s, FECHA_DEVOLUCION = CURDATE()
             WHERE PRESTAMO_ID = %s
             """,
+            (ESTADO_DEVUELTO, prestamo_id),
+        )
+        cursor.execute(
+            "SELECT LIBRO_ID FROM LIBROS_PRESTADOS WHERE PRESTAMO_ID = %s",
             (prestamo_id,),
         )
-        cursor.execute("SELECT LIBRO_ID FROM LIBROS_PRESTADOS WHERE PRESTAMO_ID = %s", (prestamo_id,))
         for libro in cursor.fetchall():
-            cursor.execute("UPDATE LIBROS SET DISPONIBLE = TRUE WHERE LIBRO_ID = %s", (libro["LIBRO_ID"],))
+            cursor.execute(
+                "UPDATE LIBROS SET DISPONIBLE = TRUE WHERE LIBRO_ID = %s",
+                (libro["LIBRO_ID"],),
+            )
         conn.commit()
         return {"id": prestamo_id, "mensaje": "Devolución registrada"}
     finally:
@@ -176,11 +203,17 @@ def eliminar_prestamo(prestamo_id: str):
         cursor.execute("SELECT * FROM PRESTAMOS WHERE PRESTAMO_ID = %s", (prestamo_id,))
         if not cursor.fetchone():
             raise HTTPException(status_code=404, detail="Préstamo no encontrado")
-        cursor.execute("SELECT LIBRO_ID FROM LIBROS_PRESTADOS WHERE PRESTAMO_ID = %s", (prestamo_id,))
+        cursor.execute(
+            "SELECT LIBRO_ID FROM LIBROS_PRESTADOS WHERE PRESTAMO_ID = %s",
+            (prestamo_id,),
+        )
         libros_asociados = cursor.fetchall()
         cursor.execute("DELETE FROM LIBROS_PRESTADOS WHERE PRESTAMO_ID = %s", (prestamo_id,))
         for libro in libros_asociados:
-            cursor.execute("UPDATE LIBROS SET DISPONIBLE = TRUE WHERE LIBRO_ID = %s", (libro["LIBRO_ID"],))
+            cursor.execute(
+                "UPDATE LIBROS SET DISPONIBLE = TRUE WHERE LIBRO_ID = %s",
+                (libro["LIBRO_ID"],),
+            )
         cursor.execute("DELETE FROM PRESTAMOS WHERE PRESTAMO_ID = %s", (prestamo_id,))
         conn.commit()
         return {"mensaje": "Préstamo eliminado"}

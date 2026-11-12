@@ -22,7 +22,8 @@ def obtener_categoria(categoria_id: str):
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute(
-            "SELECT CATEGORIA_ID AS id, NOMBRE_CATEGORIA AS nombre FROM CATEGORIAS WHERE CATEGORIA_ID = %s",
+            "SELECT CATEGORIA_ID AS id, NOMBRE_CATEGORIA AS nombre "
+            "FROM CATEGORIAS WHERE CATEGORIA_ID = %s",
             (categoria_id,),
         )
         resultado = cursor.fetchone()
@@ -38,7 +39,10 @@ def crear_categoria(categoria: CategoriaIn):
     conn = get_connection()
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT CATEGORIA_ID FROM CATEGORIAS WHERE CATEGORIA_ID = %s", (categoria.id,))
+        cursor.execute(
+            "SELECT CATEGORIA_ID FROM CATEGORIAS WHERE CATEGORIA_ID = %s",
+            (categoria.id,),
+        )
         if cursor.fetchone():
             raise HTTPException(status_code=400, detail="Ya existe una categoría con ese ID")
         cursor.execute(

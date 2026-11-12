@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import prestamos, libros, usuarios, autores, editorial, categorias, clientes
@@ -8,10 +10,14 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# Orígenes permitidos, separados por coma (ej. "http://localhost:5500").
+# Por defecto "*" (desarrollo). No se usan cookies, así que no se permiten credenciales.
+ORIGENES = [o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=ORIGENES,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

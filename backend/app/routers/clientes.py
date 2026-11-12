@@ -30,7 +30,10 @@ def obtener_cliente(cliente_id: str):
     conn = get_connection()
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute(f"SELECT {CAMPOS_CLIENTE} FROM CLIENTES WHERE CLIENTE_ID = %s", (cliente_id,))
+        cursor.execute(
+            f"SELECT {CAMPOS_CLIENTE} FROM CLIENTES WHERE CLIENTE_ID = %s",
+            (cliente_id,),
+        )
         resultado = cursor.fetchone()
         if not resultado:
             raise HTTPException(status_code=404, detail="Cliente no encontrado")
@@ -52,7 +55,10 @@ def crear_cliente(cliente: ClienteIn):
             INSERT INTO CLIENTES (CLIENTE_ID, NOMBRE, APELLIDO_P, APELLIDO_M, CORREO, TELEFONO)
             VALUES (%s, %s, %s, %s, %s, %s)
             """,
-            (cliente.id, cliente.nombre, cliente.apellido_p, cliente.apellido_m, cliente.correo, cliente.telefono),
+            (
+                cliente.id, cliente.nombre, cliente.apellido_p,
+                cliente.apellido_m, cliente.correo, cliente.telefono,
+            ),
         )
         conn.commit()
         return {"id": cliente.id, "mensaje": "Cliente creado"}
@@ -82,7 +88,8 @@ def actualizar_cliente(cliente_id: str, datos: ClienteUpdateIn):
         if not campos:
             raise HTTPException(status_code=400, detail="No se enviaron campos para actualizar")
         valores.append(cliente_id)
-        cursor.execute(f"UPDATE CLIENTES SET {', '.join(campos)} WHERE CLIENTE_ID = %s", tuple(valores))
+        sql = f"UPDATE CLIENTES SET {', '.join(campos)} WHERE CLIENTE_ID = %s"
+        cursor.execute(sql, tuple(valores))
         conn.commit()
         return {"id": cliente_id, "mensaje": "Cliente actualizado"}
     finally:

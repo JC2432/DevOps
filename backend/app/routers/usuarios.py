@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from ..database import get_connection
 from ..schemas import UsuarioIn, UsuarioUpdateIn
+from ..seguridad import hash_password
 
 router = APIRouter(prefix="/usuarios", tags=["usuarios"])
 
@@ -58,11 +59,13 @@ def crear_usuario(usuario: UsuarioIn):
             raise HTTPException(status_code=400, detail="Ya existe un usuario con ese ID")
         cursor.execute(
             """
-            INSERT INTO USUARIOS (USUARIO_ID, CARGO_ID, USERNAME, PASSWORD, NOMBRE, APELLIDO_P, APELLIDO_M)
+            INSERT INTO USUARIOS
+                (USUARIO_ID, CARGO_ID, USERNAME, PASSWORD, NOMBRE, APELLIDO_P, APELLIDO_M)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             """,
             (
-                usuario.id, usuario.cargo_id, usuario.username, usuario.password,
+                usuario.id, usuario.cargo_id, usuario.username,
+                hash_password(usuario.password),
                 usuario.nombre, usuario.apellido_p, usuario.apellido_m,
             ),
         )
@@ -89,12 +92,15 @@ def actualizar_usuario(usuario_id: str, datos: UsuarioUpdateIn):
         for campo_py, campo_sql in mapeo.items():
             valor = getattr(datos, campo_py)
             if valor is not None and valor != "":
+                if campo_py == "password":
+                    valor = hash_password(valor)
                 campos.append(f"{campo_sql} = %s")
                 valores.append(valor)
         if not campos:
             raise HTTPException(status_code=400, detail="No se enviaron campos para actualizar")
         valores.append(usuario_id)
-        cursor.execute(f"UPDATE USUARIOS SET {', '.join(campos)} WHERE USUARIO_ID = %s", tuple(valores))
+        sql = f"UPDATE USUARIOS SET {', '.join(campos)} WHERE USUARIO_ID = %s"
+        cursor.execute(sql, tuple(valores))
         conn.commit()
         return {"id": usuario_id, "mensaje": "Usuario actualizado"}
     finally:

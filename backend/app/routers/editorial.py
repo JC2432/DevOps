@@ -10,11 +10,12 @@ def obtener_editoriales():
     conn = get_connection()
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM EDITORIALES")
+        cursor.execute("SELECT * FROM EDITORIAL")
         resultados = cursor.fetchall()
         return {"editoriales": resultados}
     finally:
         conn.close()
+
 
 @router.get("/{editorial_id}")
 def obtener_editorial(editorial_id: str):
@@ -23,7 +24,7 @@ def obtener_editorial(editorial_id: str):
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute(
-            "SELECT * FROM EDITORIALES WHERE EDITORIAL_ID = %s",
+            "SELECT * FROM EDITORIAL WHERE EDITORIAL_ID = %s",
             (editorial_id,),
         )
         resultado = cursor.fetchone()
