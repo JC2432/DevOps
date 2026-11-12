@@ -3,6 +3,12 @@ from typing import Optional, List
 from datetime import date
 
 
+class LoginIn(BaseModel):
+    username: str
+    password: str
+    cargo: Optional[str] = None  # "BIBLIOTECARIO" o "ADMINISTRADOR" (opcional)
+
+
 class LibroPrestamoItem(BaseModel):
     LIBRO_ID: str
     CANTIDAD: Optional[int] = 1

@@ -1,23 +1,45 @@
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    // Evita que la página se recargue al enviar el formulario
-    event.preventDefault(); 
+const API_URL = 'http://localhost:8000';
+const SESSION_KEY = 'usuario';
 
-    // Capturar los valores ingresados
-    const user = document.getElementById('username').value;
-    const pass = document.getElementById('password').value;
-    const role = document.getElementById('role').value;
+// Si ya hay sesión, ir directo al dashboard
+if (sessionStorage.getItem(SESSION_KEY)) {
+    window.location.replace('../index.html');
+}
+
+document.getElementById('loginForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const cargo = document.getElementById('role').value;
     const errorMessage = document.getElementById('errorMessage');
+    const boton = document.getElementById('loginBtn');
 
-    // Limpiar mensajes de error previos
     errorMessage.textContent = '';
+    boton.disabled = true;
 
-    // Lógica para detectar qué perfil está ingresando
-    if (role === 'bibliotecario') {
-        // Aquí iría la validación real contra una base de datos
-        alert(`Ingresando al sistema administrativo.\nBienvenido Bibliotecario: ${user}`);
-        // window.location.href = 'panel_bibliotecario.html'; 
-    } else if (role === 'usuario') {
-        alert(`Ingresando al catálogo.\nBienvenido Usuario: ${user}`);
-        // window.location.href = 'inicio_usuario.html';
+    try {
+        const res = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, cargo }),
+        });
+
+        if (res.status === 401) {
+            errorMessage.textContent = 'Usuario, contraseña o perfil incorrectos.';
+            return;
+        }
+        if (!res.ok) {
+            errorMessage.textContent = `Error del servidor (${res.status}).`;
+            return;
+        }
+
+        const usuario = await res.json();
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(usuario));
+        window.location.href = '../index.html';
+    } catch (e) {
+        errorMessage.textContent = 'No se pudo conectar con el servidor. ¿Está corriendo el backend?';
+    } finally {
+        boton.disabled = false;
     }
 });

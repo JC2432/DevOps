@@ -1,3 +1,4 @@
+SET NAMES utf8mb4;
 -- Datos de ejemplo
 -- El orden importa: primero los catálogos, luego las tablas que los referencian (FK).
 
@@ -19,10 +20,16 @@ INSERT INTO CARGO (CARGO_ID, PUESTO) VALUES
 INSERT INTO ESTADO_PRESTAMOS (ESTADO_PRESTAMOS_ID, ESTADO) VALUES
 ('S001', 'ACTIVO'), ('S002', 'DEVUELTO'), ('S003', 'VENCIDO');
 
--- Usuario de prueba. La contraseña es un placeholder (no sirve para iniciar sesión);
--- los usuarios creados por la API sí guardan la contraseña hasheada.
+-- Usuarios de prueba (SOLO DESARROLLO). Contraseñas hasheadas con PBKDF2:
+--   admin_db   / admin123   (ADMINISTRADOR)
+--   biblio_db  / biblio123  (BIBLIOTECARIO)
 INSERT INTO USUARIOS (USUARIO_ID, CARGO_ID, USERNAME, PASSWORD, NOMBRE, APELLIDO_P) VALUES
-('U001', 'R001', 'admin_db', 'placeholder-sin-login', 'Juan', 'Pérez');
+('U001', 'R001', 'admin_db',
+ 'pbkdf2_sha256$600000$f18723e2fa556a144a3e62e4e29e1415$dc6757df02e82d27ed40e363fc67a05bc1c0484c31110d65bf21d35355f02dc4',
+ 'Juan', 'Pérez'),
+('U002', 'R002', 'biblio_db',
+ 'pbkdf2_sha256$600000$412b7997bc41e39dd097718a5855a34e$18e456be3d1ce2d13373bb95e065ff0d245a9a8fa44001038eb765096a87a8b6',
+ 'María', 'Gómez');
 
 INSERT INTO CLIENTES (CLIENTE_ID, NOMBRE, APELLIDO_P, APELLIDO_M, CORREO, TELEFONO) VALUES
 ('C001', 'Ana', 'López', NULL, 'ana@example.com', NULL);

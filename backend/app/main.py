@@ -2,7 +2,9 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import prestamos, libros, usuarios, autores, editorial, categorias, clientes
+from .routers import (
+    auth, prestamos, libros, usuarios, autores, editorial, categorias, clientes,
+)
 
 app = FastAPI(
     title="Sistema de Préstamos/Biblioteca",
@@ -22,6 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router)
 app.include_router(prestamos.router)
 app.include_router(libros.router)
 app.include_router(usuarios.router)

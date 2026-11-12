@@ -1,5 +1,54 @@
 const API_URL = 'http://localhost:8000';
 
+// ------------------------------------------
+// SESIÓN (guardada en sessionStorage al iniciar sesión en Login/)
+// ------------------------------------------
+const SESSION_KEY = 'usuario';
+const APP_BASE = new URL('.', document.currentScript.src);
+
+function obtenerSesion() {
+    try {
+        return JSON.parse(sessionStorage.getItem(SESSION_KEY));
+    } catch (e) {
+        return null;
+    }
+}
+
+function cerrarSesion() {
+    sessionStorage.removeItem(SESSION_KEY);
+    window.location.replace(new URL('Login/index.html', APP_BASE));
+}
+
+// Sin sesión: mandar al login. Esto solo controla la interfaz; la API aún no exige autenticación.
+if (!obtenerSesion()) {
+    window.location.replace(new URL('Login/index.html', APP_BASE));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const sesion = obtenerSesion();
+    const menu = document.querySelector('.sidebar-menu');
+    if (!sesion || !menu) return;
+
+    const seccion = document.createElement('div');
+    seccion.className = 'menu-section';
+
+    const titulo = document.createElement('p');
+    titulo.className = 'section-title';
+    titulo.textContent = `${sesion.nombre} · ${sesion.cargo}`;
+
+    const salir = document.createElement('a');
+    salir.href = '#';
+    salir.className = 'menu-item';
+    salir.textContent = 'Cerrar sesión';
+    salir.addEventListener('click', (e) => {
+        e.preventDefault();
+        cerrarSesion();
+    });
+
+    seccion.append(titulo, salir);
+    menu.append(seccion);
+});
+
 async function obtenerDatos(endpoint) {
     const res = await fetch(`${API_URL}${endpoint}`);
     if (!res.ok) throw new Error(`Error ${res.status}`);
