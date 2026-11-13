@@ -53,13 +53,14 @@
                             <tr>
                                 <th>ID</th>
                                 <th>TÍTULO</th>
+                                <th>EDITORIAL</th>
                                 <th>AÑO</th>
                                 <th>ESTADO</th>
                                 <th>ACCIONES</th> <!-- Nueva columna -->
                             </tr>
                         </thead>
                         <tbody id="tabla-libros">
-                            <tr><td colspan="5">Cargando libros...</td></tr>
+                            <tr><td colspan="6">Cargando libros...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -70,11 +71,10 @@
                 <div class="modal-content">
                     <h2 id="modal-titulo">Nuevo Libro</h2>
                     <form id="form-libro">
-                        <input type="text" id="libro-id" placeholder="ID (ej. L010)" required>
-                        <!-- OJO: MySQL exige que la editorial exista, usa la que creaste (ej. ED01) -->
-                        <input type="text" id="libro-editorial" placeholder="ID Editorial (ej. ED01)" required>
+                        <input type="text" id="libro-id" placeholder="ID (ej. L010)" maxlength="4" required>
+                        <select id="libro-editorial" required></select>
                         <input type="text" id="libro-titulo" placeholder="Título" required>
-                        <input type="number" id="libro-anio" placeholder="Año de publicación" required>
+                        <input type="number" id="libro-anio" placeholder="Año de publicación (opcional)" min="0" max="2100">
                         <select id="libro-estado">
                             <option value="true">Disponible</option>
                             <option value="false">No disponible</option>
@@ -88,6 +88,7 @@
             </div>
         </main>
     </div>
+    <script src="../sesion.js"></script>
     <script src="../app.js"></script>
 </body>
 </html>

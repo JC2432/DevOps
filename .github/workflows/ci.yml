@@ -13,6 +13,7 @@ env:
   DB_USER: biblio_app
   DB_PASSWORD: ci_password_123
   DB_NAME: biblioteca_db
+  SECRET_KEY: clave_solo_para_ci
 
 jobs:
   test:

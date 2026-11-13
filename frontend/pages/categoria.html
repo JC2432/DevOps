@@ -10,7 +10,6 @@
     <div class="app-container">
         <aside class="sidebar">
             <div class="sidebar-brand"><div class="brand-logo">B</div><h2>Biblioteca</h2></div>
-            <!-- Pega aquí el mismo <nav class="sidebar-menu"> unificado del Paso 1 (y ponle la clase "active" a Categorías) -->
             <nav class="sidebar-menu">
     <div class="menu-section">
         <p class="section-title">GENERAL</p>
@@ -59,7 +58,7 @@
                 <div class="modal-content">
                     <h2 id="modal-cat-titulo">Nueva Categoría</h2>
                     <form id="form-categoria">
-                        <input type="text" id="cat-id" placeholder="ID (ej. C001)" required>
+                        <input type="text" id="cat-id" placeholder="ID (ej. C004)" maxlength="4" required>
                         <input type="text" id="cat-nombre" placeholder="Nombre (ej. Terror)" required>
                         <div class="modal-actions">
                             <button type="button" class="btn-outline" onclick="cerrarModalCat()">Cancelar</button>
@@ -70,6 +69,7 @@
             </div>
         </main>
     </div>
+    <script src="../sesion.js"></script>
     <script src="../app.js"></script>
 </body>
 </html>

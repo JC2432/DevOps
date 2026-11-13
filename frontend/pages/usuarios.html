@@ -40,8 +40,8 @@
                 <div class="header-titles">
                     <h1>Directorio de Usuarios</h1>
                     <p>Gestión del personal del sistema</p>
-                    <button class="btn-primary" onclick="abrirModalUsuario('nuevo')">+ Nuevo Usuario</button>
                 </div>
+                <button class="btn-primary" onclick="abrirModalUsuario('nuevo')">+ Nuevo Usuario</button>
             </header>
             <section class="dashboard-panels">
                 <div class="panel table-panel" style="grid-column: span 2;">
@@ -63,12 +63,12 @@
             <!-- MODAL DE USUARIOS -->
             <div id="modal-usuario" class="modal">
                 <div class="modal-content">
-                    <h2>Nuevo Usuario</h2>
+                    <h2 id="modal-usuario-titulo">Nuevo Usuario</h2>
                     <form id="form-usuario">
-                        <input type="text" id="usr-id" placeholder="ID (ej. U005)" required>
-                        <input type="text" id="usr-cargo" placeholder="ID Cargo (ej. C001)" required>
+                        <input type="text" id="usr-id" placeholder="ID (ej. U005)" maxlength="4" required>
+                        <select id="usr-cargo" required></select>
                         <input type="text" id="usr-username" placeholder="Nombre de usuario" required>
-                        <input type="password" id="usr-password" placeholder="Contraseña" required>
+                        <input type="password" id="usr-password" autocomplete="new-password" minlength="6" required>
                         <input type="text" id="usr-nombre" placeholder="Nombre real" required>
                         <input type="text" id="usr-apellidop" placeholder="Apellido Paterno" required>
                         <input type="text" id="usr-apellidom" placeholder="Apellido Materno">
@@ -81,6 +81,7 @@
             </div>
         </main>
     </div>
+    <script src="../sesion.js"></script>
     <script src="../app.js"></script>
 </body>
 </html>

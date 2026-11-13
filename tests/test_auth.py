@@ -41,3 +41,26 @@ def test_login_usuario_inexistente_mismo_mensaje():
     mala_pw = client.post("/login", json={"username": "admin_db", "password": "x"})
     assert malo.status_code == 401
     assert malo.json() == mala_pw.json()
+
+
+def test_login_devuelve_token():
+    r = client.post("/login", json={"username": "admin_db", "password": "admin123"})
+    token = r.json()["token"]
+    sesion = client.get("/sesion", headers={"Authorization": f"Bearer {token}"})
+    assert sesion.status_code == 200
+    assert sesion.json() == {"id": "U001", "rol": "ADMINISTRADOR", "nombre": "Juan"}
+
+
+def test_login_cliente_con_correo():
+    r = client.post(
+        "/login",
+        json={"username": "ana@example.com", "password": "cliente123", "cargo": "CLIENTE"},
+    )
+    assert r.status_code == 200
+    assert r.json()["rol"] == "CLIENTE"
+    assert r.json()["id"] == "C001"
+
+
+def test_cliente_no_entra_como_personal():
+    r = client.post("/login", json={"username": "ana@example.com", "password": "cliente123"})
+    assert r.status_code == 401

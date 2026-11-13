@@ -44,10 +44,10 @@
                 <div class="panel table-panel" style="grid-column: span 2;">
                     <table class="modern-table">
                         <thead>
-                            <tr><th>ID</th><th>NOMBRE COMPLETO</th><th>CORREO</th><th>TELÉFONO</th><th>ACCIONES</th></tr>
+                            <tr><th>ID</th><th>NOMBRE COMPLETO</th><th>CORREO</th><th>TELÉFONO</th><th>PORTAL</th><th>ACCIONES</th></tr>
                         </thead>
                         <tbody id="tabla-clientes">
-                            <tr><td colspan="5">Cargando clientes...</td></tr>
+                            <tr><td colspan="6">Cargando clientes...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -57,12 +57,14 @@
                 <div class="modal-content">
                     <h2 id="modal-cliente-titulo">Nuevo Cliente</h2>
                     <form id="form-cliente">
-                        <input type="text" id="cli-id" placeholder="ID (ej. CL01)" required>
+                        <input type="text" id="cli-id" placeholder="ID (ej. C003)" maxlength="4" required>
                         <input type="text" id="cli-nombre" placeholder="Nombre" required>
                         <input type="text" id="cli-apellidop" placeholder="Apellido Paterno" required>
                         <input type="text" id="cli-apellidom" placeholder="Apellido Materno">
                         <input type="email" id="cli-correo" placeholder="Correo Electrónico" required>
-                        <input type="text" id="cli-telefono" placeholder="Teléfono" required>
+                        <input type="tel" id="cli-telefono" placeholder="Teléfono (opcional)">
+                        <input type="password" id="cli-password" autocomplete="new-password" minlength="6">
+                        <p class="texto-muted">Con contraseña, el cliente puede entrar al portal con su correo para ver y apartar libros.</p>
                         <div class="modal-actions">
                             <button type="button" class="btn-outline" onclick="cerrarModalCliente()">Cancelar</button>
                             <button type="submit" class="btn-primary">Guardar</button>
@@ -72,6 +74,7 @@
             </div>
         </main>
     </div>
+    <script src="../sesion.js"></script>
     <script src="../app.js"></script>
 </body>
 </html>

@@ -64,8 +64,11 @@ python --version
 El resultado esperado es similar a:
 
 ```text
-Python 3.14.0
+Python 3.12.x
 ```
+
+Si tienes varias versiones instaladas en Windows, usa `py -3.12` para crear el entorno virtual:
+`py -3.12 -m venv venv`.
 
 Para comprobar Git:
 
