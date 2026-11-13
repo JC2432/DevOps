@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi cuenta - Biblioteca</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-brand"><div class="brand-logo">B</div><h2>Biblioteca</h2></div>
+            <nav class="sidebar-menu">
+                <div class="menu-section">
+                    <p class="section-title">MI CUENTA</p>
+                    <a href="#mis-prestamos" class="menu-item active"><span class="icon">PR</span> Mis préstamos</a>
+                    <a href="#catalogo" class="menu-item"><span class="icon">LB</span> Catálogo</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1 id="saludo">Mi cuenta</h1>
+                    <p>Consulta tus préstamos y aparta libros para recogerlos en la biblioteca</p>
+                </div>
+            </header>
+
+            <div id="aviso" class="aviso" role="status"></div>
+
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon bg-purple">AP</div>
+                    <div class="kpi-data"><h3 id="kpi-apartados">-</h3><p>Apartados por recoger</p></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon bg-lightblue">PR</div>
+                    <div class="kpi-data"><h3 id="kpi-activos">-</h3><p>Préstamos activos</p></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon bg-red">VN</div>
+                    <div class="kpi-data"><h3 id="kpi-vencidos">-</h3><p>Vencidos</p></div>
+                </div>
+            </section>
+
+            <div class="panel" id="mis-prestamos">
+                <div class="panel-header"><h2>Mis préstamos</h2></div>
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>LIBROS</th><th>FECHA</th><th>FECHA LÍMITE</th>
+                            <th>ESTADO</th><th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-mis-prestamos">
+                        <tr><td colspan="6">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="panel" id="catalogo">
+                <div class="panel-header">
+                    <h2>Catálogo</h2>
+                    <div class="toolbar">
+                        <input type="search" id="buscar" placeholder="Buscar por título, editorial o categoría">
+                        <button class="btn-primary" id="btn-apartar" disabled>Apartar seleccionados</button>
+                    </div>
+                </div>
+                <p class="texto-muted">
+                    Marca los libros que quieres y presiona "Apartar". Tienes 3 días para recogerlos;
+                    desde que los recoges tienes 14 días para devolverlos. Máximo 5 libros a la vez.
+                </p>
+                <table class="modern-table">
+                    <thead>
+                        <tr><th></th><th>TÍTULO</th><th>EDITORIAL</th><th>CATEGORÍAS</th><th>AÑO</th><th>ESTADO</th></tr>
+                    </thead>
+                    <tbody id="tabla-catalogo">
+                        <tr><td colspan="6">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <script src="../sesion.js"></script>
+    <script src="portal.js"></script>
+</body>
+</html>

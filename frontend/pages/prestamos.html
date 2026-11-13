@@ -39,8 +39,17 @@
             <header class="top-header">
                 <div class="header-titles">
                     <h1>Préstamos</h1>
-                    <p>Control de préstamos y devoluciones</p>
-                    <button class="btn-primary" onclick="abrirModalPrestamo('nuevo')">+ Nuevo Préstamo</button>
+                    <p>Apartados, préstamos en mostrador y devoluciones</p>
+                </div>
+                <div class="toolbar">
+                    <select id="filtro-estado" aria-label="Filtrar por estado">
+                        <option value="">Todos</option>
+                        <option value="APARTADO">Apartados (por entregar)</option>
+                        <option value="ACTIVO">Activos</option>
+                        <option value="VENCIDO">Vencidos</option>
+                        <option value="DEVUELTO">Devueltos</option>
+                    </select>
+                    <button class="btn-primary" onclick="abrirModalPrestamo()">+ Nuevo Préstamo</button>
                 </div>
             </header>
             <section class="dashboard-panels">
@@ -48,34 +57,52 @@
                     <table class="modern-table">
                         <thead>
                             <tr>
-                                <th>ID PRÉSTAMO</th>
+                                <th>ID</th>
                                 <th>CLIENTE</th>
+                                <th>LIBROS</th>
                                 <th>FECHA PRÉSTAMO</th>
+                                <th>FECHA LÍMITE</th>
                                 <th>ESTADO</th>
-                                <th>ACCIONES</th> <!-- Agregamos esta columna -->
+                                <th>ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-prestamos">
-                            <tr><td colspan="5">Cargando préstamos...</td></tr>
+                            <tr><td colspan="7">Cargando préstamos...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </section>
-            <!-- MODAL DE PRÉSTAMOS -->
+
+            <!-- MODAL: préstamo en mostrador (el cliente se lleva los libros ahora) -->
             <div id="modal-prestamo" class="modal">
                 <div class="modal-content">
-                    <h2 id="modal-prestamo-titulo">Nuevo Préstamo</h2>
+                    <h2>Nuevo Préstamo</h2>
                     <form id="form-prestamo">
-                        <input type="text" id="prest-id" placeholder="ID Préstamo (ej. P001)" required>
-                        <input type="text" id="prest-estado" placeholder="ID Estado (ej. EP01)" required>
-                        <input type="text" id="prest-cliente" placeholder="ID Cliente (ej. CL01)" required>
-                        <input type="text" id="prest-usuario" placeholder="ID Usuario que lo atiende (ej. U001)" required>
-                        <label style="font-size: 0.8rem; color: var(--text-muted)">Fecha Préstamo:</label>
-                        <input type="date" id="prest-fechap" required>
-                        <label style="font-size: 0.8rem; color: var(--text-muted)">Fecha Devolución:</label>
-                        <input type="date" id="prest-fechad" required>
+                        <label for="prest-cliente">Cliente</label>
+                        <select id="prest-cliente" required></select>
+                        <label>Libros disponibles</label>
+                        <div id="prest-libros" class="checklist"></div>
+                        <label for="prest-fechal">Fecha límite (vacío = 14 días)</label>
+                        <input type="date" id="prest-fechal">
                         <div class="modal-actions">
                             <button type="button" class="btn-outline" onclick="cerrarModalPrestamo()">Cancelar</button>
+                            <button type="submit" class="btn-primary">Prestar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- MODAL: renovar / corregir fechas -->
+            <div id="modal-fechas" class="modal">
+                <div class="modal-content">
+                    <h2 id="fechas-titulo">Renovar préstamo</h2>
+                    <form id="form-fechas">
+                        <label for="fechas-prestamo">Fecha de préstamo</label>
+                        <input type="date" id="fechas-prestamo" required>
+                        <label for="fechas-limite">Fecha límite</label>
+                        <input type="date" id="fechas-limite" required>
+                        <div class="modal-actions">
+                            <button type="button" class="btn-outline" onclick="cerrarModalFechas()">Cancelar</button>
                             <button type="submit" class="btn-primary">Guardar</button>
                         </div>
                     </form>
@@ -83,6 +110,7 @@
             </div>
         </main>
     </div>
+    <script src="../sesion.js"></script>
     <script src="../app.js"></script>
 </body>
 </html>

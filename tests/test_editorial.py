@@ -1,21 +1,14 @@
-from fastapi.testclient import TestClient
-
-from backend.app.main import app
-
-client = TestClient(app)
-
-
-def test_listar_editoriales():
-    response = client.get("/editoriales/")
+def test_listar_editoriales(client, personal):
+    response = client.get("/editoriales/", headers=personal)
     assert response.status_code == 200
-    assert len(response.json()["editoriales"]) >= 1
+    assert len(response.json()) >= 1
 
 
-def test_obtener_editorial():
-    response = client.get("/editoriales/E001")
+def test_obtener_editorial(client, personal):
+    response = client.get("/editoriales/E001", headers=personal)
     assert response.status_code == 200
-    assert response.json()["EDITORIAL_ID"] == "E001"
+    assert response.json() == {"id": "E001", "nombre": "Fondo de Cultura Económica"}
 
 
-def test_editorial_inexistente():
-    assert client.get("/editoriales/ZZZZ").status_code == 404
+def test_editorial_inexistente(client, personal):
+    assert client.get("/editoriales/ZZZZ", headers=personal).status_code == 404

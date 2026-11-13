@@ -242,3 +242,43 @@ body {
 .btn-outline { background: transparent; border: 1px solid var(--border); padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: bold;}
 .btn-danger { background-color: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
 .btn-edit { background-color: var(--bg-sidebar); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-right: 5px;}
+
+/* =========================================
+   ESTADOS, ACCIONES Y FORMULARIOS (préstamos y portal)
+   ========================================= */
+.status-badge.green { background-color: #d1fae5; color: #059669; }
+.status-badge.amber { background-color: #fef3c7; color: #b45309; }
+.status-badge.gray { background-color: #f3f4f6; color: #6b7280; }
+
+.texto-muted { color: var(--text-muted); font-size: 0.78rem; margin-top: 4px; }
+.mensaje-error { color: #ef4444; white-space: pre-line; }
+
+.btn-success { background-color: #10b981; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-right: 5px; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.acciones { white-space: nowrap; }
+.acciones button { margin-bottom: 4px; }
+
+.toolbar { display: flex; gap: 0.75rem; align-items: center; }
+.toolbar select, .toolbar input {
+    padding: 0.5rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; font-family: inherit;
+}
+
+.modal-content { max-height: 90vh; overflow-y: auto; }
+.modal-content label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.35rem; }
+.modal-content .texto-muted { margin: -0.5rem 0 1rem; }
+
+/* Lista de casillas (elegir libros) */
+.checklist {
+    max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.5rem 0.8rem; margin-bottom: 1rem;
+}
+.modal-content .checklist label { display: flex; align-items: center; gap: 8px; color: var(--text-main); font-size: 0.9rem; margin: 0.35rem 0; }
+.modal-content .checklist input { width: auto; margin: 0; padding: 0; }
+.modal-content .checklist .texto-muted { margin: 0; }
+
+/* Avisos dentro de la página */
+.aviso { padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: none; white-space: pre-line; }
+.aviso.ok { display: block; background: #d1fae5; color: #065f46; }
+.aviso.error { display: block; background: #fee2e2; color: #991b1b; }
+
+.panel + .panel { margin-top: 1.5rem; }
